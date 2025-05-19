@@ -183,7 +183,7 @@ class dynatraceoneagent (
   $oneagent_params_array    = $oneagent_params_hash.map |$key,$value| { "${key}=${value}" }
   $oneagent_unix_params     = join($oneagent_params_array, ' ' )
   $command                  = "/bin/sh ${download_path} ${oneagent_unix_params}"
-  $state_file               = "${install_dir}/agent/agent.state"
+  $state_file               = "${lib_dir}/oneagent/agent/agent.state"
   $oneagent_tools_dir       = "${$install_dir}/agent/tools"
 
   if $package_state != 'absent' {

@@ -48,7 +48,8 @@ class dynatraceoneagent::params {
   $default_install_dir                = '/opt/dynatrace/oneagent'
   $oneagent_ctl                       = 'oneagentctl'
   $require_value                      = Exec['install_oneagent']
-  $oneagent_puppet_conf_dir           = '/var/lib/dynatrace/oneagent/agent/config/puppet'
+  $lib_dir                             = '/var/lib/dynatrace'
+  $oneagent_puppet_conf_dir           = "${lib_dir}/oneagent/agent/config/puppet"
   $oneagent_comms_config_file         = "${oneagent_puppet_conf_dir}/deployment.conf"
   $oneagent_logmonitoring_config_file = "${oneagent_puppet_conf_dir}/logmonitoring.conf"
   $oneagent_logaccess_config_file     = "${oneagent_puppet_conf_dir}/logaccess.conf"
