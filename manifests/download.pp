@@ -8,7 +8,7 @@ class dynatraceoneagent::download {
     }
   }
 
-  $created_dir          = $dynatraceoneagent::created_dir
+  $state_file           = $dynatraceoneagent::state_file
   $download_dir         = $dynatraceoneagent::download_dir
   $filename             = $dynatraceoneagent::filename
   $download_path        = $dynatraceoneagent::download_path
@@ -40,7 +40,7 @@ class dynatraceoneagent::download {
       path             => $download_path,
       allow_insecure   => $allow_insecure,
       require          => File[$download_dir],
-      creates          => $created_dir,
+      creates          => $state_file,
       proxy_server     => $proxy_server,
       cleanup          => false,
       download_options => $download_options,
@@ -70,7 +70,7 @@ class dynatraceoneagent::download {
         File[$dynatraceoneagent::dt_root_cert],
         Archive[$filename],
       ],
-      creates   => $created_dir,
+      creates   => $state_file,
     }
   }
 }

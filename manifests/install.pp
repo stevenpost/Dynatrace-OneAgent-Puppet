@@ -2,7 +2,7 @@
 #   This class manages the installation of the OneAgent on the host
 #
 class dynatraceoneagent::install {
-  $created_dir              = $dynatraceoneagent::created_dir
+  $state_file               = $dynatraceoneagent::state_file
   $download_dir             = $dynatraceoneagent::download_dir
   $filename                 = $dynatraceoneagent::filename
   $download_path            = $dynatraceoneagent::download_path
@@ -17,7 +17,7 @@ class dynatraceoneagent::install {
     command   => $dynatraceoneagent::command,
     cwd       => $download_dir,
     timeout   => 6000,
-    creates   => $created_dir,
+    creates   => $state_file,
     provider  => $provider,
     logoutput => on_failure,
   }

@@ -8,7 +8,7 @@ class dynatraceoneagent::config {
   $service_name                        = $dynatraceoneagent::service_name
   $provider                            = $dynatraceoneagent::provider
   $install_dir                         = $dynatraceoneagent::install_dir
-  $created_dir                         = $dynatraceoneagent::created_dir
+  $state_file                          = $dynatraceoneagent::state_file
   $package_state                       = $dynatraceoneagent::package_state
   $service_state                       = $dynatraceoneagent::service_state
 
