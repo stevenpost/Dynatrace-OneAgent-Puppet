@@ -107,11 +107,12 @@
 #   Configuration file location for OneAgent network zone value
 #
 class dynatraceoneagent (
+  String $tenant_url,
+  String $paas_token,
+
   String $global_mode  = $dynatraceoneagent::params::global_mode,
 
 # OneAgent Download Parameters
-  String $tenant_url                    = $dynatraceoneagent::params::tenant_url,
-  String $paas_token                    = $dynatraceoneagent::params::paas_token,
   String $api_path                      = $dynatraceoneagent::params::api_path,
   String $version                       = $dynatraceoneagent::params::version,
   String $arch                          = $dynatraceoneagent::params::arch,
