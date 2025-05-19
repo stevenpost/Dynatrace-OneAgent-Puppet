@@ -15,6 +15,22 @@ describe 'dynatraceoneagent' do
       end
 
       it { is_expected.to compile.with_all_deps }
+
+      context 'when uninstalling' do
+        let(:params) do
+          super().merge('package_state' => 'absent')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_exec('uninstall_oneagent')
+            .with(
+              command: '/opt/dynatrace/oneagent/agent/uninstall.sh',
+              onlyif: '/usr/bin/test -f /opt/dynatrace/oneagent/agent/agent.state',
+              timeout: 6000,
+            )
+        }
+      end
     end
   end
 end
