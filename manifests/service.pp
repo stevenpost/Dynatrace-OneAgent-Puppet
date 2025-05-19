@@ -3,7 +3,7 @@
 #
 class dynatraceoneagent::service {
   $service_name   = $dynatraceoneagent::service_name
-  $require_value  = $dynatraceoneagent::params::require_value
+  $require_value  = $dynatraceoneagent::require_value
   $service_state  = $dynatraceoneagent::service_state
   $package_state  = $dynatraceoneagent::package_state
   $manage_service = $dynatraceoneagent::manage_service
