@@ -139,12 +139,12 @@ class dynatraceoneagent (
   String $package_state                 = 'present',
 
   # OneAgent Host Configuration Parameters
-  Optional[Hash] $oneagent_communication_hash = {},
+  Hash $oneagent_communication_hash           = {},
   Optional[Boolean] $log_monitoring           = undef,
   Optional[Boolean] $log_access               = undef,
   Optional[String] $host_group                = undef,
-  Optional[Array] $host_tags                  = [],
-  Optional[Array] $host_metadata              = [],
+  Array $host_tags                            = [],
+  Array $host_metadata                        = [],
   Optional[String] $hostname                  = undef,
   Optional[Boolean] $infra_only               = undef,
   Optional[String] $network_zone              = undef,
