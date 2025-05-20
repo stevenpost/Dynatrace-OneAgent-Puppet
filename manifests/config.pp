@@ -6,7 +6,6 @@ class dynatraceoneagent::config {
   $global_group                        = $dynatraceoneagent::global_group
   $global_mode                         = $dynatraceoneagent::global_mode
   $service_name                        = $dynatraceoneagent::service_name
-  $provider                            = $dynatraceoneagent::provider
   $install_dir                         = $dynatraceoneagent::install_dir
   $state_file                          = $dynatraceoneagent::state_file
   $package_state                       = $dynatraceoneagent::package_state
@@ -14,7 +13,7 @@ class dynatraceoneagent::config {
 
   # OneAgent Host Configuration Parameters
   $oneagent_tools_dir                  = $dynatraceoneagent::oneagent_tools_dir
-  $oactl                               = $dynatraceoneagent::oneagent_ctl
+  $oactl                               = 'oneagentctl'
   $oneagent_communication_hash         = $dynatraceoneagent::oneagent_communication_hash
   $log_monitoring                      = $dynatraceoneagent::log_monitoring
   $log_access                          = $dynatraceoneagent::log_access
@@ -25,18 +24,22 @@ class dynatraceoneagent::config {
   $infra_only                          = $dynatraceoneagent::infra_only
   $network_zone                        = $dynatraceoneagent::network_zone
   $oneagent_puppet_conf_dir            = $dynatraceoneagent::oneagent_puppet_conf_dir
-  $oneagent_comms_config_file          = $dynatraceoneagent::oneagent_comms_config_file
-  $oneagent_logmonitoring_config_file  = $dynatraceoneagent::oneagent_logmonitoring_config_file
-  $oneagent_logaccess_config_file      = $dynatraceoneagent::oneagent_logaccess_config_file
-  $hostgroup_config_file               = $dynatraceoneagent::hostgroup_config_file
-  $hostautotag_config_file             = $dynatraceoneagent::hostautotag_config_file
-  $hostmetadata_config_file            = $dynatraceoneagent::hostmetadata_config_file
-  $hostname_config_file                = $dynatraceoneagent::hostname_config_file
-  $oneagent_infraonly_config_file      = $dynatraceoneagent::oneagent_infraonly_config_file
-  $oneagent_networkzone_config_file    = $dynatraceoneagent::oneagent_networkzone_config_file
+
+  $oneagent_comms_config_file          = "${oneagent_puppet_conf_dir}/deployment.conf"
+  $oneagent_logmonitoring_config_file  = "${oneagent_puppet_conf_dir}/logmonitoring.conf"
+  $oneagent_logaccess_config_file      = "${oneagent_puppet_conf_dir}/logaccess.conf"
+  $hostgroup_config_file               = "${oneagent_puppet_conf_dir}/hostgroup.conf"
+  $hostautotag_config_file             = "${oneagent_puppet_conf_dir}/hostautotag.conf"
+  $hostmetadata_config_file            = "${oneagent_puppet_conf_dir}/hostcustomproperties.conf"
+  $hostname_config_file                = "${oneagent_puppet_conf_dir}/hostname.conf"
+  $oneagent_infraonly_config_file      = "${oneagent_puppet_conf_dir}/infraonly.conf"
+  $oneagent_networkzone_config_file    = "${oneagent_puppet_conf_dir}/networkzone.conf"
 
   file { $oneagent_puppet_conf_dir :
-    ensure  => 'directory',
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
   }
 
   $oneagent_set_host_tags_array        = $host_tags.map |$value| { "--set-host-tag=${value}" }
@@ -179,7 +182,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -189,7 +191,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -199,7 +200,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -209,7 +209,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -219,7 +218,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -229,7 +227,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -239,7 +236,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -249,7 +245,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -259,7 +254,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -269,7 +263,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -279,7 +272,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -289,7 +281,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -299,7 +290,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -309,7 +299,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }

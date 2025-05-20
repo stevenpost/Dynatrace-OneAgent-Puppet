@@ -1,6 +1,6 @@
 # @summary
-#   This module deploys the OneAgent on Linux, Windows and AIX Operating Systems with different available configurations and ensures
-#   the OneAgent service maintains a running state. It provides types/providers to interact with the various OneAgent configuration points.
+#   This module deploys the OneAgent on Linux Operating Systems with different available configurations and ensures
+#   the OneAgent service maintains a running state.
 #
 # @example
 #    class { 'dynatraceoneagent':
@@ -49,15 +49,13 @@
 # @param reboot_system
 #   If set to true, puppet will reboot the server after installing the OneAgent - default is false
 # @param service_state
-#   What state the dynatrace oneagent service should be in - default is running
-#   Allowed values: running, stopped
+#   What state the dynatrace oneagent service should be in
 # @param manage_service
 #   Whether puppet should manage the state of the OneAgent service - default is true
 # @param service_name
 #   The name of the dynatrace OneAgent based on the OS
 # @param package_state
-#   What state the dynatrace oneagent package should be in - default is present
-#   Allowed values: present, absent
+#   What state the dynatrace oneagent package should be in
 # @param host_tags
 #   Values to automatically add tags to a host,
 #   should contain an array of strings or key/value pairs.
@@ -83,82 +81,55 @@
 #   Set the network zone for the host
 # @param oneagent_puppet_conf_dir
 #   Directory puppet will use to store oneagent configurations
-# @param oneagent_ctl
-#   Name of oneagentctl executable file
-# @param provider
-#   The specific backend to use for this exec resource.
-# @param oneagent_comms_config_file
-#   Configuration file location for OneAgent communication
-# @param oneagent_logmonitoring_config_file
-#   Configuration file location for OneAgent log monitoring
-# @param oneagent_logaccess_config_file
-#   Configuration file location for OneAgent log access
-# @param hostgroup_config_file
-#   Configuration file location for OneAgent host group value
-# @param hostmetadata_config_file
-#   Configuration file location for OneAgent host metadata value(s)
-# @param hostautotag_config_file
-#   Configuration file location for OneAgent host tag value(s)
-# @param hostname_config_file
-#   Configuration file location for OneAgent host name value
-# @param oneagent_infraonly_config_file
-#   Configuration file location for OneAgent infra only mode
-# @param oneagent_networkzone_config_file
-#   Configuration file location for OneAgent network zone value
 #
 class dynatraceoneagent (
   String $tenant_url,
   String $paas_token,
-
-  String $global_mode  = $dynatraceoneagent::params::global_mode,
+  String $global_mode                       = '0644',
 
   # OneAgent Download Parameters
-  String $api_path                      = $dynatraceoneagent::params::api_path,
-  String $version                       = $dynatraceoneagent::params::version,
-  String $arch                          = $dynatraceoneagent::params::arch,
-  String $installer_type                = $dynatraceoneagent::params::installer_type,
-  Optional[Boolean] $verify_signature   = $dynatraceoneagent::params::verify_signature,
-  Optional[String] $proxy_server        = $dynatraceoneagent::params::proxy_server,
-  Optional[String] $download_cert_link  = $dynatraceoneagent::params::download_cert_link,
-  Optional[String] $cert_file_name      = $dynatraceoneagent::params::cert_file_name,
-  Optional[String] $ca_cert_src_path    = $dynatraceoneagent::params::ca_cert_src_path,
-  Optional[Boolean] $allow_insecure     = $dynatraceoneagent::params::allow_insecure,
-  Optional $download_options            = $dynatraceoneagent::params::download_options,
+  String $api_path                          = '/api/v1/deployment/installer/agent/',
+  String $version                           = 'latest',
+  String $arch                              = 'all',
+  String $installer_type                    = 'default',
+  Boolean $verify_signature                 = false,
+  Optional[String] $proxy_server            = undef,
+  String $download_cert_link                = 'https://ca.dynatrace.com/dt-root.cert.pem',
+  String $cert_file_name                    = 'dt-root.cert.pem',
+  String $ca_cert_src_path                  = "modules/${module_name}/${cert_file_name}",
+  Boolean $allow_insecure                   = false,
+  Optional $download_options                = undef,
 
   # OneAgent Install Parameters
-  String $download_dir                  = $dynatraceoneagent::params::download_dir,
-  String $service_name                  = $dynatraceoneagent::params::service_name,
-  String $provider                      = $dynatraceoneagent::params::provider,
-  String $default_install_dir           = $dynatraceoneagent::params::default_install_dir,
-  Hash $oneagent_params_hash            = $dynatraceoneagent::params::oneagent_params_hash,
-  Boolean $reboot_system                = $dynatraceoneagent::params::reboot_system,
-  String $service_state                 = $dynatraceoneagent::params::service_state,
-  Boolean $manage_service               = $dynatraceoneagent::params::manage_service,
-  String $package_state                 = $dynatraceoneagent::params::package_state,
+  String $download_dir                      = '/tmp',
+  String $service_name                      = 'oneagent',
+  String $default_install_dir               = '/opt/dynatrace/oneagent',
+  Hash $oneagent_params_hash                = {
+    '--set-infra-only'             => 'false',
+    '--set-app-log-content-access' => 'true',
+  },
+  Boolean $reboot_system                    = false,
+  Enum['running','stopped'] $service_state  = 'running',
+  Boolean $manage_service                   = true,
+  Enum['present','absent'] $package_state   = 'present',
 
   # OneAgent Host Configuration Parameters
-  Optional[Hash] $oneagent_communication_hash = $dynatraceoneagent::params::oneagent_communication_hash,
-  Optional[Boolean] $log_monitoring           = $dynatraceoneagent::params::log_monitoring,
-  Optional[Boolean] $log_access               = $dynatraceoneagent::params::log_access,
-  Optional[String] $host_group                = $dynatraceoneagent::params::host_group,
-  Optional[Array] $host_tags                  = $dynatraceoneagent::params::host_tags,
-  Optional[Array] $host_metadata              = $dynatraceoneagent::params::host_metadata,
-  Optional[String] $hostname                  = $dynatraceoneagent::params::hostname,
-  Optional[Boolean] $infra_only               = $dynatraceoneagent::params::infra_only,
-  Optional[String] $network_zone              = $dynatraceoneagent::params::network_zone,
-  String $oneagent_ctl                        = $dynatraceoneagent::params::oneagent_ctl,
-  String $oneagent_puppet_conf_dir            = $dynatraceoneagent::params::oneagent_puppet_conf_dir,
-  String $oneagent_comms_config_file          = $dynatraceoneagent::params::oneagent_comms_config_file,
-  String $oneagent_logmonitoring_config_file  = $dynatraceoneagent::params::oneagent_logmonitoring_config_file,
-  String $oneagent_logaccess_config_file      = $dynatraceoneagent::params::oneagent_logaccess_config_file,
-  String $hostgroup_config_file               = $dynatraceoneagent::params::hostgroup_config_file,
-  String $hostautotag_config_file             = $dynatraceoneagent::params::hostautotag_config_file,
-  String $hostmetadata_config_file            = $dynatraceoneagent::params::hostmetadata_config_file,
-  String $hostname_config_file                = $dynatraceoneagent::params::hostname_config_file,
-  String $oneagent_infraonly_config_file      = $dynatraceoneagent::params::oneagent_infraonly_config_file,
-  String $oneagent_networkzone_config_file    = $dynatraceoneagent::params::oneagent_networkzone_config_file,
+  Hash $oneagent_communication_hash         = {},
+  Optional[Boolean] $log_monitoring         = undef,
+  Optional[Boolean] $log_access             = undef,
+  Optional[String] $host_group              = undef,
+  Array $host_tags                          = [],
+  Array $host_metadata                      = [],
+  Optional[String] $hostname                = undef,
+  Optional[Boolean] $infra_only             = undef,
+  Optional[String] $network_zone            = undef,
+  String $oneagent_puppet_conf_dir          = '/var/lib/dynatrace/oneagent/agent/config/puppet',
 
-) inherits dynatraceoneagent::params {
+) {
+  $global_owner = 'root'
+  $global_group = 'root'
+  $require_value = Exec['install_oneagent']
+
   if $facts['kernel'] == 'Linux' {
     $os_type = 'unix'
   } elsif $facts['os']['family']  == 'AIX' {
@@ -183,7 +154,7 @@ class dynatraceoneagent (
   $oneagent_params_array    = $oneagent_params_hash.map |$key,$value| { "${key}=${value}" }
   $oneagent_unix_params     = join($oneagent_params_array, ' ' )
   $command                  = "/bin/sh ${download_path} ${oneagent_unix_params}"
-  $state_file               = "${lib_dir}/oneagent/agent/agent.state"
+  $state_file               = '/var/lib/dynatrace/oneagent/agent/agent.state'
   $oneagent_tools_dir       = "${$install_dir}/agent/tools"
 
   if $package_state != 'absent' {
