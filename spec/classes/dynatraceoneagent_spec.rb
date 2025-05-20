@@ -24,6 +24,71 @@ describe 'dynatraceoneagent' do
             mode: '0644',
           )
       }
+      it {
+        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
+          .with(
+            ensure: 'absent',
+          )
+      }
+
+      context 'with "infra_only => true' do
+        let(:params) do
+          super().merge('infra_only' => true)
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
+            .with(
+              ensure: 'file',
+              mode: '0644',
+              content: 'true',
+            )
+        }
+        it {
+          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
+            .that_notifies('Exec[set_infra_only]')
+        }
+        it {
+          is_expected.to contain_exec('set_infra_only')
+            .with(
+              command: 'oneagentctl --set-infra-only=true --restart-service',
+              path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
+              timeout: 6000,
+              logoutput: 'on_failure',
+              refreshonly: true,
+            )
+        }
+      end
+      context 'with "infra_only => false' do
+        let(:params) do
+          super().merge('infra_only' => false)
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
+            .with(
+              ensure: 'file',
+              mode: '0644',
+              content: 'false',
+            )
+        }
+        it {
+          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
+            .that_notifies('Exec[set_infra_only]')
+        }
+        it {
+          is_expected.to contain_exec('set_infra_only')
+            .with(
+              command: 'oneagentctl --set-infra-only=false --restart-service',
+              path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
+              timeout: 6000,
+              logoutput: 'on_failure',
+              refreshonly: true,
+            )
+        }
+      end
 
       context 'when uninstalling' do
         let(:params) do
