@@ -1,6 +1,6 @@
 # @summary
-#   This module deploys the OneAgent on Linux, Windows and AIX Operating Systems with different available configurations and ensures
-#   the OneAgent service maintains a running state. It provides types/providers to interact with the various OneAgent configuration points.
+#   This module deploys the OneAgent on Linux Operating Systems with different available configurations and ensures
+#   the OneAgent service maintains a running state.
 #
 # @example
 #    class { 'dynatraceoneagent':
