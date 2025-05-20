@@ -81,8 +81,6 @@
 #   Set the network zone for the host
 # @param oneagent_puppet_conf_dir
 #   Directory puppet will use to store oneagent configurations
-# @param oneagent_ctl
-#   Name of oneagentctl executable file
 #
 class dynatraceoneagent (
   String $tenant_url,
@@ -125,7 +123,6 @@ class dynatraceoneagent (
   Optional[String] $hostname                  = undef,
   Optional[Boolean] $infra_only               = undef,
   Optional[String] $network_zone              = undef,
-  String $oneagent_ctl                        = 'oneagentctl',
   String $oneagent_lib_dir                    = '/var/lib/dynatrace/oneagent',
   String $oneagent_puppet_conf_dir            = "${oneagent_lib_dir}/agent/config/puppet",
 

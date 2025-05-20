@@ -13,7 +13,7 @@ class dynatraceoneagent::config {
 
   # OneAgent Host Configuration Parameters
   $oneagent_tools_dir                  = $dynatraceoneagent::oneagent_tools_dir
-  $oactl                               = $dynatraceoneagent::oneagent_ctl
+  $oactl                               = 'oneagentctl'
   $oneagent_communication_hash         = $dynatraceoneagent::oneagent_communication_hash
   $log_monitoring                      = $dynatraceoneagent::log_monitoring
   $log_access                          = $dynatraceoneagent::log_access
