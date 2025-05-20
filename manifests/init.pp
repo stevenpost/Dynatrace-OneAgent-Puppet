@@ -49,8 +49,7 @@
 # @param reboot_system
 #   If set to true, puppet will reboot the server after installing the OneAgent - default is false
 # @param service_state
-#   What state the dynatrace oneagent service should be in - default is running
-#   Allowed values: running, stopped
+#   What state the dynatrace oneagent service should be in
 # @param manage_service
 #   Whether puppet should manage the state of the OneAgent service - default is true
 # @param service_name
@@ -113,7 +112,7 @@ class dynatraceoneagent (
     '--set-app-log-content-access' => 'true',
   },
   Boolean $reboot_system                = false,
-  String $service_state                 = 'running',
+  Enum['running','stopped'] $service_state = 'running',
   Boolean $manage_service               = true,
   String $package_state                 = 'present',
 
