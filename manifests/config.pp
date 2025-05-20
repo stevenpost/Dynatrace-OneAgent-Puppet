@@ -25,15 +25,16 @@ class dynatraceoneagent::config {
   $infra_only                          = $dynatraceoneagent::infra_only
   $network_zone                        = $dynatraceoneagent::network_zone
   $oneagent_puppet_conf_dir            = $dynatraceoneagent::oneagent_puppet_conf_dir
-  $oneagent_comms_config_file          = $dynatraceoneagent::oneagent_comms_config_file
-  $oneagent_logmonitoring_config_file  = $dynatraceoneagent::oneagent_logmonitoring_config_file
-  $oneagent_logaccess_config_file      = $dynatraceoneagent::oneagent_logaccess_config_file
-  $hostgroup_config_file               = $dynatraceoneagent::hostgroup_config_file
-  $hostautotag_config_file             = $dynatraceoneagent::hostautotag_config_file
-  $hostmetadata_config_file            = $dynatraceoneagent::hostmetadata_config_file
-  $hostname_config_file                = $dynatraceoneagent::hostname_config_file
-  $oneagent_infraonly_config_file      = $dynatraceoneagent::oneagent_infraonly_config_file
-  $oneagent_networkzone_config_file    = $dynatraceoneagent::oneagent_networkzone_config_file
+
+  $oneagent_comms_config_file          = "${oneagent_puppet_conf_dir}/deployment.conf"
+  $oneagent_logmonitoring_config_file  = "${oneagent_puppet_conf_dir}/logmonitoring.conf"
+  $oneagent_logaccess_config_file      = "${oneagent_puppet_conf_dir}/logaccess.conf"
+  $hostgroup_config_file               = "${oneagent_puppet_conf_dir}/hostgroup.conf"
+  $hostautotag_config_file             = "${oneagent_puppet_conf_dir}/hostautotag.conf"
+  $hostmetadata_config_file            = "${oneagent_puppet_conf_dir}/hostcustomproperties.conf"
+  $hostname_config_file                = "${oneagent_puppet_conf_dir}/hostname.conf"
+  $oneagent_infraonly_config_file      = "${oneagent_puppet_conf_dir}/infraonly.conf"
+  $oneagent_networkzone_config_file    = "${oneagent_puppet_conf_dir}/networkzone.conf"
 
   file { $oneagent_puppet_conf_dir :
     ensure => 'directory',

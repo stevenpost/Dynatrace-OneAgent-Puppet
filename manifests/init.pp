@@ -87,24 +87,6 @@
 #   Name of oneagentctl executable file
 # @param provider
 #   The specific backend to use for this exec resource.
-# @param oneagent_comms_config_file
-#   Configuration file location for OneAgent communication
-# @param oneagent_logmonitoring_config_file
-#   Configuration file location for OneAgent log monitoring
-# @param oneagent_logaccess_config_file
-#   Configuration file location for OneAgent log access
-# @param hostgroup_config_file
-#   Configuration file location for OneAgent host group value
-# @param hostmetadata_config_file
-#   Configuration file location for OneAgent host metadata value(s)
-# @param hostautotag_config_file
-#   Configuration file location for OneAgent host tag value(s)
-# @param hostname_config_file
-#   Configuration file location for OneAgent host name value
-# @param oneagent_infraonly_config_file
-#   Configuration file location for OneAgent infra only mode
-# @param oneagent_networkzone_config_file
-#   Configuration file location for OneAgent network zone value
 #
 class dynatraceoneagent (
   String $tenant_url,
@@ -151,15 +133,6 @@ class dynatraceoneagent (
   String $oneagent_ctl                        = 'oneagentctl',
   String $oneagent_lib_dir                    = '/var/lib/dynatrace/oneagent',
   String $oneagent_puppet_conf_dir            = "${oneagent_lib_dir}/agent/config/puppet",
-  String $oneagent_comms_config_file          = "${oneagent_puppet_conf_dir}/deployment.conf",
-  String $oneagent_logmonitoring_config_file  = "${oneagent_puppet_conf_dir}/logmonitoring.conf",
-  String $oneagent_logaccess_config_file      = "${oneagent_puppet_conf_dir}/logaccess.conf",
-  String $hostgroup_config_file               = "${oneagent_puppet_conf_dir}/hostgroup.conf",
-  String $hostautotag_config_file             = "${oneagent_puppet_conf_dir}/hostautotag.conf",
-  String $hostmetadata_config_file            = "${oneagent_puppet_conf_dir}/hostcustomproperties.conf",
-  String $hostname_config_file                = "${oneagent_puppet_conf_dir}/hostname.conf",
-  String $oneagent_infraonly_config_file      = "${oneagent_puppet_conf_dir}/infraonly.conf",
-  String $oneagent_networkzone_config_file    = "${oneagent_puppet_conf_dir}/networkzone.conf",
 
 ) {
   $global_owner = 'root'
