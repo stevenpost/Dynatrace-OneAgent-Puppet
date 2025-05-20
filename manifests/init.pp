@@ -55,8 +55,7 @@
 # @param service_name
 #   The name of the dynatrace OneAgent based on the OS
 # @param package_state
-#   What state the dynatrace oneagent package should be in - default is present
-#   Allowed values: present, absent
+#   What state the dynatrace oneagent package should be in
 # @param host_tags
 #   Values to automatically add tags to a host,
 #   should contain an array of strings or key/value pairs.
@@ -114,7 +113,7 @@ class dynatraceoneagent (
   Boolean $reboot_system                = false,
   Enum['running','stopped'] $service_state = 'running',
   Boolean $manage_service               = true,
-  String $package_state                 = 'present',
+  Enum['present','absent'] $package_state  = 'present',
 
   # OneAgent Host Configuration Parameters
   Hash $oneagent_communication_hash           = {},
