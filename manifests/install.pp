@@ -6,7 +6,6 @@ class dynatraceoneagent::install {
   $download_dir             = $dynatraceoneagent::download_dir
   $filename                 = $dynatraceoneagent::filename
   $download_path            = $dynatraceoneagent::download_path
-  $provider                 = $dynatraceoneagent::provider
   $oneagent_params_hash     = $dynatraceoneagent::oneagent_params_hash
   $reboot_system            = $dynatraceoneagent::reboot_system
   $service_name             = $dynatraceoneagent::service_name
@@ -18,7 +17,6 @@ class dynatraceoneagent::install {
     cwd       => $download_dir,
     timeout   => 6000,
     creates   => $state_file,
-    provider  => $provider,
     logoutput => on_failure,
   }
 

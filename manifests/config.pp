@@ -6,7 +6,6 @@ class dynatraceoneagent::config {
   $global_group                        = $dynatraceoneagent::global_group
   $global_mode                         = $dynatraceoneagent::global_mode
   $service_name                        = $dynatraceoneagent::service_name
-  $provider                            = $dynatraceoneagent::provider
   $install_dir                         = $dynatraceoneagent::install_dir
   $state_file                          = $dynatraceoneagent::state_file
   $package_state                       = $dynatraceoneagent::package_state
@@ -183,7 +182,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -193,7 +191,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -203,7 +200,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -213,7 +209,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -223,7 +218,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -233,7 +227,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -243,7 +236,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -253,7 +245,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -263,7 +254,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -273,7 +263,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -283,7 +272,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -293,7 +281,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -303,7 +290,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }
@@ -313,7 +299,6 @@ class dynatraceoneagent::config {
     path        => $oneagentctl_exec_path,
     cwd         => $oneagent_tools_dir,
     timeout     => 6000,
-    provider    => $provider,
     logoutput   => on_failure,
     refreshonly => true,
   }

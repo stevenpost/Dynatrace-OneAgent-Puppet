@@ -19,7 +19,6 @@ class dynatraceoneagent::download {
   $download_cert_link   = $dynatraceoneagent::download_cert_link
   $cert_file_name       = $dynatraceoneagent::cert_file_name
   $ca_cert_src_path     = $dynatraceoneagent::ca_cert_src_path
-  $provider             = $dynatraceoneagent::provider
   $oneagent_params_hash = $dynatraceoneagent::oneagent_params_hash
   $reboot_system        = $dynatraceoneagent::reboot_system
   $service_name         = $dynatraceoneagent::service_name
@@ -63,7 +62,6 @@ class dynatraceoneagent::download {
       command   => "rm ${$download_path} ${dynatraceoneagent::dt_root_cert}",
       cwd       => $download_dir,
       timeout   => 6000,
-      provider  => $provider,
       logoutput => on_failure,
       unless    => $verify_signature_command,
       require   => [

@@ -85,8 +85,6 @@
 #   Directory puppet will use to store oneagent configurations
 # @param oneagent_ctl
 #   Name of oneagentctl executable file
-# @param provider
-#   The specific backend to use for this exec resource.
 #
 class dynatraceoneagent (
   String $tenant_url,
@@ -109,7 +107,6 @@ class dynatraceoneagent (
   # OneAgent Install Parameters
   String $download_dir                  = '/tmp',
   String $service_name                  = 'oneagent',
-  String $provider                      = 'shell',
   String $default_install_dir           = '/opt/dynatrace/oneagent',
   Hash $oneagent_params_hash            = {
     '--set-infra-only'             => 'false',
