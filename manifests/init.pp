@@ -116,12 +116,12 @@ class dynatraceoneagent (
   String $version                       = 'latest',
   String $arch                          = 'all',
   String $installer_type                = 'default',
-  Optional[Boolean] $verify_signature   = false,
+  Boolean $verify_signature             = false,
   Optional[String] $proxy_server        = undef,
-  Optional[String] $download_cert_link  = 'https://ca.dynatrace.com/dt-root.cert.pem',
-  Optional[String] $cert_file_name      = 'dt-root.cert.pem',
-  Optional[String] $ca_cert_src_path    = "modules/${module_name}/${cert_file_name}",
-  Optional[Boolean] $allow_insecure     = false,
+  String $download_cert_link            = 'https://ca.dynatrace.com/dt-root.cert.pem',
+  String $cert_file_name                = 'dt-root.cert.pem',
+  String $ca_cert_src_path              = "modules/${module_name}/${cert_file_name}",
+  Boolean $allow_insecure               = false,
   Optional $download_options            = undef,
 
   # OneAgent Install Parameters
