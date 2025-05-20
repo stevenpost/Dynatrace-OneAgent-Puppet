@@ -123,8 +123,7 @@ class dynatraceoneagent (
   Optional[String] $hostname                = undef,
   Optional[Boolean] $infra_only             = undef,
   Optional[String] $network_zone            = undef,
-  String $oneagent_lib_dir                  = '/var/lib/dynatrace/oneagent',
-  String $oneagent_puppet_conf_dir          = "${oneagent_lib_dir}/agent/config/puppet",
+  String $oneagent_puppet_conf_dir          = '/var/lib/dynatrace/oneagent/agent/config/puppet',
 
 ) {
   $global_owner = 'root'
@@ -155,7 +154,7 @@ class dynatraceoneagent (
   $oneagent_params_array    = $oneagent_params_hash.map |$key,$value| { "${key}=${value}" }
   $oneagent_unix_params     = join($oneagent_params_array, ' ' )
   $command                  = "/bin/sh ${download_path} ${oneagent_unix_params}"
-  $state_file               = "${oneagent_lib_dir}/agent/agent.state"
+  $state_file               = '/var/lib/dynatrace/oneagent/agent/agent.state'
   $oneagent_tools_dir       = "${$install_dir}/agent/tools"
 
   if $package_state != 'absent' {
