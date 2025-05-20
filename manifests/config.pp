@@ -36,7 +36,10 @@ class dynatraceoneagent::config {
   $oneagent_networkzone_config_file    = $dynatraceoneagent::oneagent_networkzone_config_file
 
   file { $oneagent_puppet_conf_dir :
-    ensure  => 'directory',
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
   }
 
   $oneagent_set_host_tags_array        = $host_tags.map |$value| { "--set-host-tag=${value}" }

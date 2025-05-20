@@ -15,6 +15,15 @@ describe 'dynatraceoneagent' do
       end
 
       it { is_expected.to compile.with_all_deps }
+      it {
+        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet')
+          .with(
+            ensure: 'directory',
+            owner: 'root',
+            group: 'root',
+            mode: '0644',
+          )
+      }
 
       context 'when uninstalling' do
         let(:params) do
