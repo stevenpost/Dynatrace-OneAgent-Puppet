@@ -97,15 +97,11 @@ Data type: `String`
 URL of your dynatrace Tenant
 Managed `https://{your-domain}/e/{your-environment-id}` - SaaS `https://{your-environment-id}.live.dynatrace.com`
 
-Default value: `$dynatraceoneagent::params::tenant_url`
-
 ##### <a name="paas_token"></a>`paas_token`
 
 Data type: `String`
 
 Paas token for downloading the OneAgent installer
-
-Default value: `$dynatraceoneagent::params::paas_token`
 
 ##### <a name="api_path"></a>`api_path`
 
