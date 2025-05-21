@@ -75,8 +75,8 @@
 #   Enable or disable access to system logs
 # @param host_group
 #   Change host group assignment
-# @param infra_only
-#   Enable or disable Infrastructure Monitoring mode
+# @param monitoring_mode
+#   Set the monitoring mode
 # @param network_zone
 #   Set the network zone for the host
 # @param oneagent_puppet_conf_dir
@@ -85,45 +85,45 @@
 class dynatraceoneagent (
   String $tenant_url,
   String $paas_token,
-  String $global_mode                       = '0644',
+  String $global_mode                                         = '0644',
 
   # OneAgent Download Parameters
-  String $api_path                          = '/api/v1/deployment/installer/agent/',
-  String $version                           = 'latest',
-  String $arch                              = 'all',
-  String $installer_type                    = 'default',
-  Boolean $verify_signature                 = false,
-  Optional[String] $proxy_server            = undef,
-  String $download_cert_link                = 'https://ca.dynatrace.com/dt-root.cert.pem',
-  String $cert_file_name                    = 'dt-root.cert.pem',
-  String $ca_cert_src_path                  = "modules/${module_name}/${cert_file_name}",
-  Boolean $allow_insecure                   = false,
-  Optional $download_options                = undef,
+  String $api_path                                            = '/api/v1/deployment/installer/agent/',
+  String $version                                             = 'latest',
+  String $arch                                                = 'all',
+  String $installer_type                                      = 'default',
+  Boolean $verify_signature                                   = false,
+  Optional[String] $proxy_server                              = undef,
+  String $download_cert_link                                  = 'https://ca.dynatrace.com/dt-root.cert.pem',
+  String $cert_file_name                                      = 'dt-root.cert.pem',
+  String $ca_cert_src_path                                    = "modules/${module_name}/${cert_file_name}",
+  Boolean $allow_insecure                                     = false,
+  Optional $download_options                                  = undef,
 
   # OneAgent Install Parameters
-  String $download_dir                      = '/tmp',
-  String $service_name                      = 'oneagent',
-  String $default_install_dir               = '/opt/dynatrace/oneagent',
-  Hash $oneagent_params_hash                = {
+  String $download_dir                                        = '/tmp',
+  String $service_name                                        = 'oneagent',
+  String $default_install_dir                                 = '/opt/dynatrace/oneagent',
+  Hash $oneagent_params_hash                                  = {
     '--set-infra-only'             => 'false',
     '--set-app-log-content-access' => 'true',
   },
-  Boolean $reboot_system                    = false,
-  Enum['running','stopped'] $service_state  = 'running',
-  Boolean $manage_service                   = true,
-  Enum['present','absent'] $package_state   = 'present',
+  Boolean $reboot_system                                      = false,
+  Enum['running','stopped'] $service_state                    = 'running',
+  Boolean $manage_service                                     = true,
+  Enum['present','absent'] $package_state                     = 'present',
 
   # OneAgent Host Configuration Parameters
-  Hash $oneagent_communication_hash         = {},
-  Optional[Boolean] $log_monitoring         = undef,
-  Optional[Boolean] $log_access             = undef,
-  Optional[String] $host_group              = undef,
-  Array $host_tags                          = [],
-  Array $host_metadata                      = [],
-  Optional[String] $hostname                = undef,
-  Optional[Boolean] $infra_only             = undef,
-  Optional[String] $network_zone            = undef,
-  String $oneagent_puppet_conf_dir          = '/var/lib/dynatrace/oneagent/agent/config/puppet',
+  Hash $oneagent_communication_hash                           = {},
+  Optional[Boolean] $log_monitoring                           = undef,
+  Optional[Boolean] $log_access                               = undef,
+  Optional[String] $host_group                                = undef,
+  Array $host_tags                                            = [],
+  Array $host_metadata                                        = [],
+  Optional[String] $hostname                                  = undef,
+  Enum['fullstack','infra-only','discovery'] $monitoring_mode = 'fullstack',
+  Optional[String] $network_zone                              = undef,
+  String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
 
 ) {
   $global_owner = 'root'

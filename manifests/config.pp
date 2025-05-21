@@ -21,7 +21,7 @@ class dynatraceoneagent::config {
   $host_tags                           = $dynatraceoneagent::host_tags
   $host_metadata                       = $dynatraceoneagent::host_metadata
   $hostname                            = $dynatraceoneagent::hostname
-  $infra_only                          = $dynatraceoneagent::infra_only
+  $monitoring_mode                     = $dynatraceoneagent::monitoring_mode
   $network_zone                        = $dynatraceoneagent::network_zone
   $oneagent_puppet_conf_dir            = $dynatraceoneagent::oneagent_puppet_conf_dir
 
@@ -150,17 +150,8 @@ class dynatraceoneagent::config {
     }
   }
 
-  if $infra_only != undef {
-    file { $oneagent_infraonly_config_file:
-      ensure  => file,
-      content => String($infra_only),
-      notify  => Exec['set_infra_only'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $oneagent_infraonly_config_file:
-      ensure => absent,
-    }
+  file { $oneagent_infraonly_config_file:
+    ensure => absent,
   }
 
   if $network_zone {
@@ -276,13 +267,13 @@ class dynatraceoneagent::config {
     refreshonly => true,
   }
 
-  exec { 'set_infra_only':
-    command     => "${oactl} --set-infra-only=${infra_only} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  exec { 'set_monitoring_mode':
+    command   => "${oactl} --set-monitoring-mode=${monitoring_mode} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    unless    => "${oactl} --get-monitoring-mode | grep -q ${monitoring_mode}",
   }
 
   exec { 'set_network_zone':

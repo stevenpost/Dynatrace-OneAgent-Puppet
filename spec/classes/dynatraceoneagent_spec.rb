@@ -30,62 +30,44 @@ describe 'dynatraceoneagent' do
             ensure: 'absent',
           )
       }
+      it {
+        is_expected.to contain_exec('set_monitoring_mode')
+          .with(
+            command: 'oneagentctl --set-monitoring-mode=fullstack --restart-service',
+            path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
+            cwd: '/opt/dynatrace/oneagent/agent/tools',
+            timeout: 6000,
+            logoutput: 'on_failure',
+            unless: 'oneagentctl --get-monitoring-mode | grep -q fullstack',
+          )
+      }
 
-      context 'with "infra_only => true' do
+      context 'with "monitoring_mode => discovery"' do
         let(:params) do
-          super().merge('infra_only' => true)
+          super().merge('monitoring_mode' => 'discovery')
         end
 
         it { is_expected.to compile.with_all_deps }
         it {
-          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
+          is_expected.to contain_exec('set_monitoring_mode')
             .with(
-              ensure: 'file',
-              mode: '0644',
-              content: 'true',
-            )
-        }
-        it {
-          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
-            .that_notifies('Exec[set_infra_only]')
-        }
-        it {
-          is_expected.to contain_exec('set_infra_only')
-            .with(
-              command: 'oneagentctl --set-infra-only=true --restart-service',
-              path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
-              timeout: 6000,
-              logoutput: 'on_failure',
-              refreshonly: true,
+              command: 'oneagentctl --set-monitoring-mode=discovery --restart-service',
+              unless: 'oneagentctl --get-monitoring-mode | grep -q discovery',
             )
         }
       end
-      context 'with "infra_only => false' do
+
+      context 'with "monitoring_mode => infra-only"' do
         let(:params) do
-          super().merge('infra_only' => false)
+          super().merge('monitoring_mode' => 'infra-only')
         end
 
         it { is_expected.to compile.with_all_deps }
         it {
-          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
+          is_expected.to contain_exec('set_monitoring_mode')
             .with(
-              ensure: 'file',
-              mode: '0644',
-              content: 'false',
-            )
-        }
-        it {
-          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
-            .that_notifies('Exec[set_infra_only]')
-        }
-        it {
-          is_expected.to contain_exec('set_infra_only')
-            .with(
-              command: 'oneagentctl --set-infra-only=false --restart-service',
-              path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
-              timeout: 6000,
-              logoutput: 'on_failure',
-              refreshonly: true,
+              command: 'oneagentctl --set-monitoring-mode=infra-only --restart-service',
+              unless: 'oneagentctl --get-monitoring-mode | grep -q infra-only',
             )
         }
       end
