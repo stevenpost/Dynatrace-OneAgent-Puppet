@@ -41,6 +41,12 @@ describe 'dynatraceoneagent' do
           )
       }
       it {
+        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logaccess.conf')
+          .with(
+            ensure: 'absent',
+          )
+      }
+      it {
         is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logmonitoring.conf')
           .with(
             ensure: 'absent',
@@ -61,6 +67,17 @@ describe 'dynatraceoneagent' do
             timeout: 6000,
             logoutput: 'on_failure',
             unless: 'oneagentctl --get-monitoring-mode | grep -q fullstack',
+          )
+      }
+      it {
+        is_expected.to contain_exec('set_log_access')
+          .with(
+            command: 'oneagentctl --set-system-logs-access-enabled=true --restart-service',
+            path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
+            cwd: '/opt/dynatrace/oneagent/agent/tools',
+            timeout: 6000,
+            logoutput: 'on_failure',
+            unless: 'oneagentctl --get-system-logs-access-enabled | grep -q true',
           )
       }
       it {
@@ -121,6 +138,21 @@ describe 'dynatraceoneagent' do
           install_command = catalogue.resource('Exec[install_oneagent]')[:command]
           expect(install_command).to include('--set-monitoring-mode=infra-only')
         end
+      end
+
+      context 'with "log_access => false"' do
+        let(:params) do
+          super().merge('log_access' => false)
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_exec('set_log_access')
+            .with(
+              command: 'oneagentctl --set-system-logs-access-enabled=false --restart-service',
+              unless: 'oneagentctl --get-system-logs-access-enabled | grep -q false',
+            )
+        }
       end
 
       context 'with "log_monitoring => false"' do

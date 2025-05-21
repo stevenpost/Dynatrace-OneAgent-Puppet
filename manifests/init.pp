@@ -112,7 +112,7 @@ class dynatraceoneagent (
   # OneAgent Host Configuration Parameters
   Hash $oneagent_communication_hash                           = {},
   Boolean $log_monitoring                                     = true,
-  Optional[Boolean] $log_access                               = undef,
+  Boolean $log_access                                         = true,
   Optional[String] $host_group                                = undef,
   Array $host_tags                                            = [],
   Array $host_metadata                                        = [],

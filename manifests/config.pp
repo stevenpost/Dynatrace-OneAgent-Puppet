@@ -72,17 +72,8 @@ class dynatraceoneagent::config {
     ensure => absent,
   }
 
-  if $log_access != undef {
-    file { $oneagent_logaccess_config_file:
-      ensure  => file,
-      content => String($log_access),
-      notify  => Exec['set_log_access'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $oneagent_logaccess_config_file:
-      ensure => absent,
-    }
+  file { $oneagent_logaccess_config_file:
+    ensure => absent,
   }
 
   if $host_group {
@@ -178,12 +169,12 @@ class dynatraceoneagent::config {
   }
 
   exec { 'set_log_access':
-    command     => "${oactl} --set-system-logs-access-enabled=${log_access} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+    command   => "${oactl} --set-system-logs-access-enabled=${log_access} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    unless    => "${oactl} --get-system-logs-access-enabled | grep -q ${log_access}",
   }
 
   exec { 'set_host_group':
