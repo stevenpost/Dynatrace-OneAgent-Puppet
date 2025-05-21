@@ -107,18 +107,8 @@ class dynatraceoneagent::config {
     }
   }
 
-  if $hostname {
-    file { $hostname_config_file:
-      ensure  => file,
-      content => $hostname,
-      notify  => Exec['set_hostname'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $hostname_config_file:
-      ensure => absent,
-      notify => Exec['unset_hostname'],
-    }
+  file { $hostname_config_file:
+    ensure => absent,
   }
 
   file { $oneagent_infraonly_config_file:
@@ -211,22 +201,23 @@ class dynatraceoneagent::config {
     refreshonly => true,
   }
 
-  exec { 'set_hostname':
-    command     => "${oactl} --set-host-name=${hostname} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  if $hostname == undef {
+    $_hostname_onlyif = "[ \$(${oactl} --get-host-name) ]"
+    $_hostname_unless = undef
+  }
+  else {
+    $_hostname_onlyif = undef
+    $_hostname_unless = "${oactl} --get-host-name | grep -q '^${hostname}$'"
   }
 
-  exec { 'unset_hostname':
-    command     => "${oactl} --set-host-name=\"\" --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  exec { 'set_hostname':
+    command   => "${oactl} --set-host-name=${hostname} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    onlyif    => $_hostname_onlyif,
+    unless    => $_hostname_unless,
   }
 
   exec { 'set_monitoring_mode':

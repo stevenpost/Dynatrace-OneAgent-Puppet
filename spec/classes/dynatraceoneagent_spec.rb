@@ -47,6 +47,12 @@ describe 'dynatraceoneagent' do
           )
       }
       it {
+        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostname.conf')
+          .with(
+            ensure: 'absent',
+          )
+      }
+      it {
         is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/networkzone.conf')
           .with(
             ensure: 'absent',
@@ -79,6 +85,18 @@ describe 'dynatraceoneagent' do
             timeout: 6000,
             logoutput: 'on_failure',
             onlyif: '[ $(oneagentctl --get-host-group) ]',
+            unless: nil,
+          )
+      }
+      it {
+        is_expected.to contain_exec('set_hostname')
+          .with(
+            command: 'oneagentctl --set-host-name= --restart-service',
+            path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
+            cwd: '/opt/dynatrace/oneagent/agent/tools',
+            timeout: 6000,
+            logoutput: 'on_failure',
+            onlyif: '[ $(oneagentctl --get-host-name) ]',
             unless: nil,
           )
       }
@@ -150,6 +168,22 @@ describe 'dynatraceoneagent' do
               command: 'oneagentctl --set-host-group=testgroup --restart-service',
               onlyif: nil,
               unless: 'oneagentctl --get-host-group | grep -q \'^testgroup$\'',
+            )
+        }
+      end
+
+      context 'with "hostname => testhost"' do
+        let(:params) do
+          super().merge('hostname' => 'testhost')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_exec('set_hostname')
+            .with(
+              command: 'oneagentctl --set-host-name=testhost --restart-service',
+              onlyif: nil,
+              unless: 'oneagentctl --get-host-name | grep -q \'^testhost$\'',
             )
         }
       end
