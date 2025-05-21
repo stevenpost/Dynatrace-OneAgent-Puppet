@@ -5,7 +5,6 @@ class dynatraceoneagent::config {
   $global_owner                        = $dynatraceoneagent::global_owner
   $global_group                        = $dynatraceoneagent::global_group
   $global_mode                         = $dynatraceoneagent::global_mode
-  $service_name                        = $dynatraceoneagent::service_name
   $install_dir                         = $dynatraceoneagent::install_dir
   $state_file                          = $dynatraceoneagent::state_file
   $package_state                       = $dynatraceoneagent::package_state
