@@ -68,17 +68,8 @@ class dynatraceoneagent::config {
     }
   }
 
-  if $log_monitoring != undef {
-    file { $oneagent_logmonitoring_config_file:
-      ensure  => file,
-      content => String($log_monitoring),
-      notify  => Exec['set_log_monitoring'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $oneagent_logmonitoring_config_file:
-      ensure => absent,
-    }
+  file { $oneagent_logmonitoring_config_file:
+    ensure => absent,
   }
 
   if $log_access != undef {
@@ -178,12 +169,12 @@ class dynatraceoneagent::config {
   }
 
   exec { 'set_log_monitoring':
-    command     => "${oactl} --set-app-log-content-access=${log_monitoring} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+    command   => "${oactl} --set-app-log-content-access=${log_monitoring} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    unless    => "${oactl} --get-app-log-content-access | grep -q ${log_monitoring}",
   }
 
   exec { 'set_log_access':
