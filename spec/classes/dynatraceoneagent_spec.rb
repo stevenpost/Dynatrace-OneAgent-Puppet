@@ -16,6 +16,17 @@ describe 'dynatraceoneagent' do
 
       it { is_expected.to compile.with_all_deps }
       it {
+        is_expected.to contain_exec('install_oneagent')
+          .with(
+            command: '/bin/sh /tmp/Dynatrace-OneAgent-Linux-latest.sh --set-infra-only=false --set-app-log-content-access=true',
+            cwd: '/tmp',
+            timeout: 6000,
+            creates: '/var/lib/dynatrace/oneagent/agent/config/agent.state',
+            logoutput: 'on_failure',
+          )
+      }
+      it { is_expected.not_to contain_reboot('after') }
+      it {
         is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet')
           .with(
             ensure: 'directory',
@@ -41,6 +52,16 @@ describe 'dynatraceoneagent' do
             unless: 'oneagentctl --get-monitoring-mode | grep -q fullstack',
           )
       }
+
+      context 'with "reboot_system => true"' do
+        let(:params) do
+          super().merge('reboot_system' => true)
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_exec('install_oneagent').that_notifies('Reboot[after]') }
+        it { is_expected.to contain_reboot('after') }
+      end
 
       context 'with "monitoring_mode => discovery"' do
         let(:params) do
@@ -86,6 +107,7 @@ describe 'dynatraceoneagent' do
               timeout: 6000,
             )
         }
+        it { is_expected.not_to contain_exec('install_oneagent') }
       end
     end
   end
