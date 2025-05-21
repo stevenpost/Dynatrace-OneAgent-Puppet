@@ -106,16 +106,16 @@ class dynatraceoneagent (
   Hash $oneagent_communication_hash                           = {},
   Boolean $log_monitoring                                     = true,
   Boolean $log_access                                         = true,
-  Optional[String] $host_group                                = undef,
+  Optional[String[1]] $host_group                             = undef,
   Array $host_tags                                            = [],
   Array $host_metadata                                        = [],
-  Optional[String] $hostname                                  = undef,
+  Optional[String[1]] $hostname                               = undef,
   Enum['fullstack','infra-only','discovery'] $monitoring_mode = 'fullstack',
   Hash $oneagent_params_hash                                  = {
     '--set-monitoring-mode'        => $monitoring_mode,
     '--set-app-log-content-access' => $log_monitoring,
   },
-  Optional[String] $network_zone                              = undef,
+  Optional[String[1]] $network_zone                           = undef,
   String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
 
 ) {
