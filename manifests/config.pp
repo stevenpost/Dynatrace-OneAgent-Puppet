@@ -125,18 +125,8 @@ class dynatraceoneagent::config {
     ensure => absent,
   }
 
-  if $network_zone {
-    file { $oneagent_networkzone_config_file:
-      ensure  => file,
-      content => $network_zone,
-      notify  => Exec['set_network_zone'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $oneagent_networkzone_config_file:
-      ensure => absent,
-      notify => Exec['unset_network_zone'],
-    }
+  file { $oneagent_networkzone_config_file:
+    ensure => absent,
   }
 
   exec { 'set_oneagent_communication':
@@ -248,21 +238,22 @@ class dynatraceoneagent::config {
     unless    => "${oactl} --get-monitoring-mode | grep -q ${monitoring_mode}",
   }
 
-  exec { 'set_network_zone':
-    command     => "${oactl} --set-network-zone=${network_zone} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  if $network_zone == undef {
+    $_network_zone_onlyif = "[ \$(${oactl} --get-network-zone) ]"
+    $_network_zone_unless = undef
+  }
+  else {
+    $_network_zone_onlyif = undef
+    $_network_zone_unless = "${oactl} --get-network-zone | grep -q '^${network_zone}$'"
   }
 
-  exec { 'unset_network_zone':
-    command     => "${oactl} --set-network-zone=\"\" --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  exec { 'set_network_zone':
+    command   => "${oactl} --set-network-zone=${network_zone} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    onlyif    => $_network_zone_onlyif,
+    unless    => $_network_zone_unless,
   }
 }
