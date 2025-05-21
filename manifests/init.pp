@@ -41,8 +41,6 @@
 #   Refer to [Download Customizations](https://github.com/voxpupuli/puppet-archive#download-customizations)
 # @param download_dir
 #   OneAgent installer file download directory.
-# @param default_install_dir
-#   OneAgent default install directory
 # @param oneagent_params_hash
 #   Hash map of additional parameters to pass to the installer
 #   Refer to the Customize OneAgent installation documentation on [Technology Support](https://www.dynatrace.com/support/help/technology-support/operating-systems/)
@@ -103,7 +101,6 @@ class dynatraceoneagent (
   # OneAgent Install Parameters
   String $download_dir                                        = '/tmp',
   String $service_name                                        = 'oneagent',
-  String $default_install_dir                                 = '/opt/dynatrace/oneagent',
   Boolean $reboot_system                                      = false,
   Enum['running','stopped'] $service_state                    = 'running',
   Boolean $manage_service                                     = true,
@@ -126,6 +123,7 @@ class dynatraceoneagent (
   String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
 
 ) {
+  $default_install_dir = '/opt/dynatrace/oneagent'
   $global_owner = 'root'
   $global_group = 'root'
   $require_value = Exec['install_oneagent']
