@@ -35,7 +35,7 @@ describe 'dynatraceoneagent' do
           is_expected.to contain_exec('uninstall_oneagent')
             .with(
               command: '/opt/dynatrace/oneagent/agent/uninstall.sh',
-              onlyif: '/usr/bin/test -f /var/lib/dynatrace/oneagent/agent/agent.state',
+              onlyif: '/usr/bin/test -f /var/lib/dynatrace/oneagent/agent/config/agent.state',
               timeout: 6000,
             )
         }
