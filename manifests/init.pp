@@ -104,10 +104,6 @@ class dynatraceoneagent (
   String $download_dir                                        = '/tmp',
   String $service_name                                        = 'oneagent',
   String $default_install_dir                                 = '/opt/dynatrace/oneagent',
-  Hash $oneagent_params_hash                                  = {
-    '--set-infra-only'             => 'false',
-    '--set-app-log-content-access' => 'true',
-  },
   Boolean $reboot_system                                      = false,
   Enum['running','stopped'] $service_state                    = 'running',
   Boolean $manage_service                                     = true,
@@ -122,6 +118,10 @@ class dynatraceoneagent (
   Array $host_metadata                                        = [],
   Optional[String] $hostname                                  = undef,
   Enum['fullstack','infra-only','discovery'] $monitoring_mode = 'fullstack',
+  Hash $oneagent_params_hash                                  = {
+    '--set-monitoring-mode'        => $monitoring_mode,
+    '--set-app-log-content-access' => 'true',
+  },
   Optional[String] $network_zone                              = undef,
   String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
 

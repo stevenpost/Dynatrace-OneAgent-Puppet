@@ -21,7 +21,7 @@ describe 'dynatraceoneagent' do
             command: [
               '/bin/sh',
               '/tmp/Dynatrace-OneAgent-Linux-latest.sh',
-              '--set-infra-only=false',
+              '--set-monitoring-mode=fullstack',
               '--set-app-log-content-access=true',
             ],
             cwd: '/tmp',
@@ -81,6 +81,10 @@ describe 'dynatraceoneagent' do
               unless: 'oneagentctl --get-monitoring-mode | grep -q discovery',
             )
         }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('--set-monitoring-mode=discovery')
+        end
       end
 
       context 'with "monitoring_mode => infra-only"' do
@@ -96,6 +100,10 @@ describe 'dynatraceoneagent' do
               unless: 'oneagentctl --get-monitoring-mode | grep -q infra-only',
             )
         }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('--set-monitoring-mode=infra-only')
+        end
       end
 
       context 'when uninstalling' do
