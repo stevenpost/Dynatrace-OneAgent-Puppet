@@ -47,8 +47,6 @@
 #   What state the dynatrace oneagent service should be in
 # @param manage_service
 #   Whether puppet should manage the state of the OneAgent service - default is true
-# @param service_name
-#   The name of the dynatrace OneAgent based on the OS
 # @param package_state
 #   What state the dynatrace oneagent package should be in
 # @param host_tags
@@ -96,7 +94,6 @@ class dynatraceoneagent (
 
   # OneAgent Install Parameters
   String $download_dir                                        = '/tmp',
-  String $service_name                                        = 'oneagent',
   Boolean $reboot_system                                      = false,
   Enum['running','stopped'] $service_state                    = 'running',
   Boolean $manage_service                                     = true,
