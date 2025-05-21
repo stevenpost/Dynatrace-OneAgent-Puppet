@@ -18,7 +18,12 @@ describe 'dynatraceoneagent' do
       it {
         is_expected.to contain_exec('install_oneagent')
           .with(
-            command: '/bin/sh /tmp/Dynatrace-OneAgent-Linux-latest.sh --set-infra-only=false --set-app-log-content-access=true',
+            command: [
+              '/bin/sh',
+              '/tmp/Dynatrace-OneAgent-Linux-latest.sh',
+              '--set-infra-only=false',
+              '--set-app-log-content-access=true',
+            ],
             cwd: '/tmp',
             timeout: 6000,
             creates: '/var/lib/dynatrace/oneagent/agent/config/agent.state',

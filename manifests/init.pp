@@ -151,9 +151,6 @@ class dynatraceoneagent (
   $filename                 = "Dynatrace-OneAgent-${facts['kernel']}-${version}.sh"
   $download_path            = "${download_dir}/${filename}"
   $dt_root_cert             = "${download_dir}/${cert_file_name}"
-  $oneagent_params_array    = $oneagent_params_hash.map |$key,$value| { "${key}=${value}" }
-  $oneagent_unix_params     = join($oneagent_params_array, ' ' )
-  $command                  = "/bin/sh ${download_path} ${oneagent_unix_params}"
   $state_file               = '/var/lib/dynatrace/oneagent/agent/config/agent.state'
   $oneagent_tools_dir       = "${$install_dir}/agent/tools"
 
