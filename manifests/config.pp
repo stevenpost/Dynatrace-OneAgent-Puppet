@@ -75,18 +75,8 @@ class dynatraceoneagent::config {
     ensure => absent,
   }
 
-  if $host_group {
-    file { $hostgroup_config_file:
-      ensure  => file,
-      content => $host_group,
-      notify  => Exec['set_host_group'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $hostgroup_config_file:
-      ensure => absent,
-      notify => Exec['unset_host_group'],
-    }
+  file { $hostgroup_config_file:
+    ensure => absent,
   }
 
   if $host_tags.length > 0 {
@@ -176,22 +166,23 @@ class dynatraceoneagent::config {
     unless    => "${oactl} --get-system-logs-access-enabled | grep -q ${log_access}",
   }
 
-  exec { 'set_host_group':
-    command     => "${oactl} --set-host-group=${host_group} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  if $host_group == undef {
+    $_host_group_onlyif = "[ \$(${oactl} --get-host-group) ]"
+    $_host_group_unless = undef
+  }
+  else {
+    $_host_group_onlyif = undef
+    $_host_group_unless = "${oactl} --get-host-group | grep -q '^${host_group}$'"
   }
 
-  exec { 'unset_host_group':
-    command     => "${oactl} --set-host-group= --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  exec { 'set_host_group':
+    command   => "${oactl} --set-host-group=${host_group} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    onlyif    => $_host_group_onlyif,
+    unless    => $_host_group_unless,
   }
 
   exec { 'set_host_tags':

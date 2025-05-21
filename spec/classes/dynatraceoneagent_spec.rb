@@ -41,6 +41,12 @@ describe 'dynatraceoneagent' do
           )
       }
       it {
+        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostgroup.conf')
+          .with(
+            ensure: 'absent',
+          )
+      }
+      it {
         is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logaccess.conf')
           .with(
             ensure: 'absent',
@@ -56,6 +62,18 @@ describe 'dynatraceoneagent' do
         is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
           .with(
             ensure: 'absent',
+          )
+      }
+      it {
+        is_expected.to contain_exec('set_host_group')
+          .with(
+            command: 'oneagentctl --set-host-group= --restart-service',
+            path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
+            cwd: '/opt/dynatrace/oneagent/agent/tools',
+            timeout: 6000,
+            logoutput: 'on_failure',
+            onlyif: '[ $(oneagentctl --get-host-group) ]',
+            unless: nil,
           )
       }
       it {
@@ -100,6 +118,22 @@ describe 'dynatraceoneagent' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_exec('install_oneagent').that_notifies('Reboot[after]') }
         it { is_expected.to contain_reboot('after') }
+      end
+
+      context 'with "host_group => testgroup"' do
+        let(:params) do
+          super().merge('host_group' => 'testgroup')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_exec('set_host_group')
+            .with(
+              command: 'oneagentctl --set-host-group=testgroup --restart-service',
+              onlyif: nil,
+              unless: 'oneagentctl --get-host-group | grep -q \'^testgroup$\'',
+            )
+        }
       end
 
       context 'with "monitoring_mode => discovery"' do
