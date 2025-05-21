@@ -8,9 +8,6 @@
 #        paas_token  => '{your-paas-token}',
 #    }
 #
-# @param global_mode
-#   Sets the permissions for any files that don't have
-#   this assignment either set manually or by the OneAgent installer
 # @param tenant_url
 #   URL of your dynatrace Tenant
 #   Managed `https://{your-domain}/e/{your-environment-id}` - SaaS `https://{your-environment-id}.live.dynatrace.com`
@@ -83,7 +80,6 @@
 class dynatraceoneagent (
   String $tenant_url,
   String $paas_token,
-  String $global_mode                                         = '0644',
 
   # OneAgent Download Parameters
   String $api_path                                            = '/api/v1/deployment/installer/agent/',
@@ -123,6 +119,7 @@ class dynatraceoneagent (
   String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
 
 ) {
+  $global_mode = '0644'
   $default_install_dir = '/opt/dynatrace/oneagent'
   $global_owner = 'root'
   $global_group = 'root'
