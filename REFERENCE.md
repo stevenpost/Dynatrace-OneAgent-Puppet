@@ -14,7 +14,6 @@ the OneAgent service maintains a running state.
 #### Private Classes
 
 * `dynatraceoneagent::config`: This class manages the configuration of the OneAgent
-* `dynatraceoneagent::download`: This class downloads the OneAgent installer binary
 * `dynatraceoneagent::install`: This class manages the installation of the OneAgent on the host
 * `dynatraceoneagent::service`: Manages the OneAgent service
 * `dynatraceoneagent::uninstall`: Uninstalls the Dynatrace OneAgent

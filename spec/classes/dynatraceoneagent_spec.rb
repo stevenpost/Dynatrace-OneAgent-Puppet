@@ -15,6 +15,22 @@ describe 'dynatraceoneagent' do
       end
 
       it { is_expected.to compile.with_all_deps }
+      it { is_expected.not_to contain_file('/tmp') }
+      it {
+        is_expected.to contain_archive('oneagent_installer')
+          .with(
+            ensure: 'present',
+            extract: false,
+            source: 'https://live.dynatrace.com/api/v1/deployment/installer/agent/unix/default/latest/?Api-Token=my_paas_token&arch=all',
+            path: '/tmp/Dynatrace-OneAgent-Linux-latest.sh',
+            allow_insecure: false,
+            creates: '/var/lib/dynatrace/oneagent/agent/config/agent.state',
+            proxy_server: nil,
+            cleanup: false,
+            download_options: nil,
+          )
+      }
+      it { is_expected.not_to contain_exec('verify_oneagent_installer') }
       it {
         is_expected.to contain_exec('install_oneagent')
           .with(
@@ -30,6 +46,16 @@ describe 'dynatraceoneagent' do
             logoutput: 'on_failure',
           )
       }
+      it { is_expected.to contain_exec('install_oneagent').that_requires('Archive[oneagent_installer]') }
+      it {
+        is_expected.to contain_exec('delete_oneagent_installer_script')
+          .with(
+            command: 'rm /tmp/Dynatrace-OneAgent-Linux-latest.sh',
+            path: ['/usr/bin'],
+            onlyif: '/usr/bin/test -f /tmp/Dynatrace-OneAgent-Linux-latest.sh',
+          )
+      }
+      it { is_expected.to contain_exec('delete_oneagent_installer_script').that_requires('Exec[install_oneagent]') }
       it { is_expected.not_to contain_reboot('after') }
       it {
         is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet')
@@ -40,42 +66,13 @@ describe 'dynatraceoneagent' do
             mode: '0644',
           )
       }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostgroup.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostname.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/networkzone.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logaccess.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logmonitoring.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet').that_requires('Exec[install_oneagent]') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostgroup.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostname.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/networkzone.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logaccess.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logmonitoring.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf').with(ensure: 'absent') }
       it {
         is_expected.to contain_exec('set_host_group')
           .with(
@@ -88,6 +85,7 @@ describe 'dynatraceoneagent' do
             unless: nil,
           )
       }
+      it { is_expected.to contain_exec('set_host_group').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_hostname')
           .with(
@@ -100,6 +98,7 @@ describe 'dynatraceoneagent' do
             unless: nil,
           )
       }
+      it { is_expected.to contain_exec('set_hostname').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_monitoring_mode')
           .with(
@@ -111,6 +110,7 @@ describe 'dynatraceoneagent' do
             unless: 'oneagentctl --get-monitoring-mode | grep -q fullstack',
           )
       }
+      it { is_expected.to contain_exec('set_monitoring_mode').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_network_zone')
           .with(
@@ -123,6 +123,7 @@ describe 'dynatraceoneagent' do
             unless: nil,
           )
       }
+      it { is_expected.to contain_exec('set_network_zone').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_log_access')
           .with(
@@ -134,6 +135,7 @@ describe 'dynatraceoneagent' do
             unless: 'oneagentctl --get-system-logs-access-enabled | grep -q true',
           )
       }
+      it { is_expected.to contain_exec('set_log_access').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_log_monitoring')
           .with(
@@ -145,22 +147,101 @@ describe 'dynatraceoneagent' do
             unless: 'oneagentctl --get-app-log-content-access | grep -q true',
           )
       }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
+      it { is_expected.to contain_exec('set_log_monitoring').that_requires('Exec[install_oneagent]') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf').with(ensure: 'absent') }
       it {
         is_expected.not_to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf')
           .that_notifies('Exec[set_oneagent_communication]')
       }
-      it {
-        is_expected.to contain_exec('set_oneagent_communication')
-          .with(
-            refreshonly: true,
-          )
-      }
+      it { is_expected.to contain_exec('set_oneagent_communication').with(refreshonly: true) }
+
+      context 'with "download_dir => /root/tmp"' do
+        let(:params) do
+          super().merge('download_dir' => '/root/tmp')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_file('/root/tmp').with(ensure: 'directory') }
+        it { is_expected.to contain_archive('oneagent_installer').that_requires('File[/root/tmp]') }
+
+        context 'with "verify_signature => true"' do
+          let(:params) do
+            super().merge('verify_signature' => true)
+          end
+
+          it { is_expected.to compile.with_all_deps }
+          it { is_expected.to contain_file('/root/tmp/dt-root.cert.pem') }
+          it {
+            is_expected.to contain_exec('verify_oneagent_installer')
+              .with(
+                command: %r{cat /root/tmp/Dynatrace-OneAgent-Linux-latest.sh},
+              )
+          }
+          it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{-CAfile /root/tmp/dt-root.cert.pem}) }
+          it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('File[/root/tmp/dt-root.cert.pem]') }
+        end
+      end
+
+      context 'with "verify_signature => true"' do
+        let(:params) do
+          super().merge('verify_signature' => true)
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_file('/tmp/dt-root.cert.pem')
+            .with(
+              ensure: 'file',
+              mode: '0644',
+              source: 'puppet:///modules/dynatraceoneagent/dt-root.cert.pem',
+            )
+        }
+        it {
+          is_expected.to contain_exec('verify_oneagent_installer')
+            .with(
+              command: %r{cat /tmp/Dynatrace-OneAgent-Linux-latest.sh},
+              path: ['/usr/bin'],
+            )
+        }
+        it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{-CAfile /tmp/dt-root.cert.pem}) }
+        it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('File[/tmp/dt-root.cert.pem]') }
+        it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('Archive[oneagent_installer]') }
+        it { is_expected.to contain_exec('install_oneagent').that_requires('Exec[verify_oneagent_installer]') }
+      end
+
+      context 'with "version => 1.181.63.20191105-161318"' do
+        let(:params) do
+          super().merge('version' => '1.181.63.20191105-161318')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_archive('oneagent_installer')
+            .with(
+              source: 'https://live.dynatrace.com/api/v1/deployment/installer/agent/unix/default/version/1.181.63.20191105-161318?Api-Token=my_paas_token&arch=all',
+            )
+        }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('/tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh')
+        end
+        it {
+          is_expected.to contain_exec('delete_oneagent_installer_script')
+            .with(
+              command: 'rm /tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh',
+              onlyif: '/usr/bin/test -f /tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh',
+            )
+        }
+
+        context 'with "verify_signature => true"' do
+          let(:params) do
+            super().merge('verify_signature' => true)
+          end
+
+          it { is_expected.to compile.with_all_deps }
+          it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{cat /tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh}) }
+        end
+      end
 
       context 'with "reboot_system => true"' do
         let(:params) do
