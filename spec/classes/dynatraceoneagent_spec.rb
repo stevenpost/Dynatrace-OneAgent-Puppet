@@ -55,42 +55,12 @@ describe 'dynatraceoneagent' do
             mode: '0644',
           )
       }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostgroup.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostname.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/networkzone.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logaccess.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logmonitoring.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostgroup.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostname.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/networkzone.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logaccess.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logmonitoring.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf').with(ensure: 'absent') }
       it {
         is_expected.to contain_exec('set_host_group')
           .with(
@@ -160,22 +130,12 @@ describe 'dynatraceoneagent' do
             unless: 'oneagentctl --get-app-log-content-access | grep -q true',
           )
       }
-      it {
-        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf')
-          .with(
-            ensure: 'absent',
-          )
-      }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf').with(ensure: 'absent') }
       it {
         is_expected.not_to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf')
           .that_notifies('Exec[set_oneagent_communication]')
       }
-      it {
-        is_expected.to contain_exec('set_oneagent_communication')
-          .with(
-            refreshonly: true,
-          )
-      }
+      it { is_expected.to contain_exec('set_oneagent_communication').with(refreshonly: true) }
 
       context 'with "download_dir => /root/tmp"' do
         let(:params) do
