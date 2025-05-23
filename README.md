@@ -73,14 +73,14 @@ When you declare this class with the mandatory options, the module:
 * downloads the required binaries needed to install the OneAgent on the target
   host
 * Installs the OneAgent with the default installation parameters:
-  --set-infra-only=false, --set-app-log-content-access=true
+  --set-monitoring-mode=fullstack, --set-app-log-content-access=true
 * Applies any specified configuration via the [oneagentctl]
 * Ensures the Dynatrace OneAgent service is running and enabled.
 
 ## Usage
 
 Default OneAgent install parameters defined in params.pp as a hash map:
---set-infra-only=false, --set-app-log-content-access=true
+--set-monitoring-mode=fullstack, --set-app-log-content-access=true
 
 ### Most basic OneAgent installation using a SAAS tenant
 
@@ -137,7 +137,7 @@ class { 'dynatraceoneagent':
     hostname         => 'apache.puppet.vm',
     log_monitoring   => false,
     log_access       => false,
-    infra_only       => true,
+    monitoring_mode  => 'infra-only',
 }
 ```
 
