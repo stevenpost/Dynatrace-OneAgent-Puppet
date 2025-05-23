@@ -24,26 +24,24 @@ class dynatraceoneagent::download {
   $package_state        = $dynatraceoneagent::package_state
   $global_mode          = $dynatraceoneagent::global_mode
 
-  if $package_state != 'absent' {
-    file { $download_dir:
-      ensure => directory,
-    }
-
-    archive { $filename:
-      ensure           => present,
-      extract          => false,
-      source           => $download_link,
-      path             => $download_path,
-      allow_insecure   => $allow_insecure,
-      require          => File[$download_dir],
-      creates          => $state_file,
-      proxy_server     => $proxy_server,
-      cleanup          => false,
-      download_options => $download_options,
-    }
+  file { $download_dir:
+    ensure => directory,
   }
 
-  if  $dynatraceoneagent::verify_signature and $package_state != 'absent' {
+  archive { $filename:
+    ensure           => present,
+    extract          => false,
+    source           => $download_link,
+    path             => $download_path,
+    allow_insecure   => $allow_insecure,
+    require          => File[$download_dir],
+    creates          => $state_file,
+    proxy_server     => $proxy_server,
+    cleanup          => false,
+    download_options => $download_options,
+  }
+
+  if  $dynatraceoneagent::verify_signature {
     file { $dynatraceoneagent::dt_root_cert:
       ensure  => file,
       mode    => $global_mode,
