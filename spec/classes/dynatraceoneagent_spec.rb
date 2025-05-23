@@ -145,6 +145,22 @@ describe 'dynatraceoneagent' do
             unless: 'oneagentctl --get-app-log-content-access | grep -q true',
           )
       }
+      it {
+        is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf')
+          .with(
+            ensure: 'absent',
+          )
+      }
+      it {
+        is_expected.not_to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf')
+          .that_notifies('Exec[set_oneagent_communication]')
+      }
+      it {
+        is_expected.to contain_exec('set_oneagent_communication')
+          .with(
+            refreshonly: true,
+          )
+      }
 
       context 'with "reboot_system => true"' do
         let(:params) do
@@ -274,6 +290,43 @@ describe 'dynatraceoneagent' do
           install_command = catalogue.resource('Exec[install_oneagent]')[:command]
           expect(install_command).to include('--set-app-log-content-access=false')
         end
+      end
+
+      context 'with "oneagent_communication_hash" => { "--set-server" => "https://example.com:9999", "--set-tenant" => "abcdefg" }' do
+        let(:params) do
+          super().merge(
+            'oneagent_communication_hash' => {
+              '--set-server': 'https://example.com:9999',
+              '--set-tenant': 'abcdefg',
+            },
+          )
+        end
+
+        it {
+          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf')
+            .with(
+              ensure: 'file',
+              owner: 'root',
+              group: 'root',
+              mode: '0644',
+              content: %r{'--set-server' => 'https://example.com:9999', '--set-tenant' => 'abcdefg'},
+            )
+        }
+        it {
+          is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf')
+            .that_notifies('Exec[set_oneagent_communication]')
+        }
+        it {
+          is_expected.to contain_exec('set_oneagent_communication')
+            .with(
+              command: 'oneagentctl --set-server=https://example.com:9999 --set-tenant=abcdefg --restart-service',
+              path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
+              cwd: '/opt/dynatrace/oneagent/agent/tools',
+              timeout: 6000,
+              logoutput: 'on_failure',
+              refreshonly: true,
+            )
+        }
       end
 
       context 'when uninstalling' do

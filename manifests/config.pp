@@ -57,6 +57,8 @@ class dynatraceoneagent::config {
   if $oneagent_communication_array.length > 0 {
     file { $oneagent_comms_config_file:
       ensure  => file,
+      owner   => $global_owner,
+      group   => $global_group,
       content => String($oneagent_communication_hash),
       notify  => Exec['set_oneagent_communication'],
       mode    => $global_mode,
