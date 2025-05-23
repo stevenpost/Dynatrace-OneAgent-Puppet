@@ -290,6 +290,10 @@ describe 'dynatraceoneagent' do
               unless: 'oneagentctl --get-host-group | grep -q \'^testgroup$\'',
             )
         }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('--set-host-group=testgroup')
+        end
       end
 
       context 'with "hostname => testhost"' do
@@ -306,6 +310,10 @@ describe 'dynatraceoneagent' do
               unless: 'oneagentctl --get-host-name | grep -q \'^testhost$\'',
             )
         }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('--set-host-name=testhost')
+        end
       end
 
       context 'with "monitoring_mode => discovery"' do
@@ -360,6 +368,10 @@ describe 'dynatraceoneagent' do
               unless: 'oneagentctl --get-network-zone | grep -q \'^testzone$\'',
             )
         }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('--set-network-zone=testzone')
+        end
       end
 
       context 'with "log_access => false"' do
@@ -375,6 +387,10 @@ describe 'dynatraceoneagent' do
               unless: 'oneagentctl --get-system-logs-access-enabled | grep -q false',
             )
         }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('--set-system-logs-access-enabled=false')
+        end
       end
 
       context 'with "log_monitoring => false"' do

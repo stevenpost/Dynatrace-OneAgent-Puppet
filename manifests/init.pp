@@ -124,6 +124,29 @@ class dynatraceoneagent (
     $install_dir = $default_install_dir
   }
 
+  $host_group_param = $host_group ? {
+    undef   => {},
+    default => { '--set-host-group' => $host_group },
+  }
+  $hostname_param = $hostname ? {
+    undef   => {},
+    default => { '--set-host-name' => $hostname },
+  }
+  $network_zone_param = $network_zone ? {
+    undef   => {},
+    default => { '--set-network-zone' => $network_zone },
+  }
+  $log_access_param = $log_access ? {
+    false   => { '--set-system-logs-access-enabled' => 'false' },
+    default => {},
+  }
+
+  $real_oneagent_params_hash = $oneagent_params_hash
+  + $host_group_param
+  + $hostname_param
+  + $network_zone_param
+  + $log_access_param
+
   if $version == 'latest' {
     $download_link  = "${tenant_url}${api_path}${os_type}/${installer_type}/latest/?Api-Token=${paas_token}&arch=${arch}"
   } else {

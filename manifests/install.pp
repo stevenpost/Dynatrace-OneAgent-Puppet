@@ -10,22 +10,22 @@ class dynatraceoneagent::install {
     }
   }
 
-  $allow_insecure        = $dynatraceoneagent::allow_insecure
-  $download_dir          = $dynatraceoneagent::download_dir
-  $download_link         = $dynatraceoneagent::download_link
-  $download_options      = $dynatraceoneagent::download_options
-  $download_path         = $dynatraceoneagent::download_path
-  $filename              = $dynatraceoneagent::filename
-  $global_mode           = $dynatraceoneagent::global_mode
-  $package_state         = $dynatraceoneagent::package_state
-  $proxy_server          = $dynatraceoneagent::proxy_server
-  $reboot_system         = $dynatraceoneagent::reboot_system
-  $state_file            = $dynatraceoneagent::state_file
-  $oneagent_params_hash  = $dynatraceoneagent::oneagent_params_hash
-  $oneagent_params_array = $oneagent_params_hash.map |$key,$value| { "${key}=${value}" }
+  $allow_insecure            = $dynatraceoneagent::allow_insecure
+  $download_dir              = $dynatraceoneagent::download_dir
+  $download_link             = $dynatraceoneagent::download_link
+  $download_options          = $dynatraceoneagent::download_options
+  $download_path             = $dynatraceoneagent::download_path
+  $filename                  = $dynatraceoneagent::filename
+  $global_mode               = $dynatraceoneagent::global_mode
+  $package_state             = $dynatraceoneagent::package_state
+  $proxy_server              = $dynatraceoneagent::proxy_server
+  $reboot_system             = $dynatraceoneagent::reboot_system
+  $state_file                = $dynatraceoneagent::state_file
+  $real_oneagent_params_hash = $dynatraceoneagent::real_oneagent_params_hash
+  $oneagent_params_array     = $real_oneagent_params_hash.map |$key,$value| { "${key}=${value}" }
 
-  $cert_file_name        = 'dt-root.cert.pem'
-  $dt_root_cert          = "${download_dir}/${cert_file_name}"
+  $cert_file_name            = 'dt-root.cert.pem'
+  $dt_root_cert              = "${download_dir}/${cert_file_name}"
 
   if $download_dir != '/tmp' {
     file { $download_dir:
