@@ -6,8 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
- - Provide option to disable puppet from managing the OneAgent service using the `manage_service` parameter
- - Dynatrace root cert file is now directly passed with module instead of requiring archive for download
+- Provide option to disable puppet from managing the OneAgent service using the
+  `manage_service` parameter
+- Dynatrace root cert file is now directly passed with module instead of
+  requiring archive for download
 
 ### Bugfixes
 
@@ -21,12 +23,12 @@ TBD
 
 ### Features
 
- - Simplified conditions by setting conditions on class containment on init.pp
- - Move uninstall tasks to new `dynatraceoneagent::uninstall` class.
+- Simplified conditions by setting conditions on class containment on init.pp
+- Move uninstall tasks to new `dynatraceoneagent::uninstall` class.
 
 ### Bugfixes
 
- - Dynatrace OneAgent Windows uninstalls now executed via PowerShell
+- Dynatrace OneAgent Windows uninstalls now executed via PowerShell
 
 ### Known Issues
 
@@ -36,11 +38,12 @@ TBD
 
 ### Features
 
- - Add download_options parameter on Archive resource in case custom flags are needed for curl/wget/s3 when downloading the OneAgent installer
+- Add download_options parameter on Archive resource in case custom flags are
+  needed for curl/wget/s3 when downloading the OneAgent installer
 
 ### Bugfixes
 
- - Added `--restart-service` parameter to `oneagentctl --set-network-zone` command
+- Added `--restart-service` parameter to `oneagentctl --set-network-zone` command
 
 ### Known Issues
 
@@ -50,12 +53,14 @@ TBD
 
 ### Features
 
- - Use shell (`/bin/sh`) to run OneAgent install script on Linux and AIX systems
- - Remove resource `file{ $download_path:}` as it is not needed anymore with the addition of shell to the install OneAgent command
+- Use shell (`/bin/sh`) to run OneAgent install script on Linux and AIX systems
+- Remove resource `file{ $download_path:}` as it is not needed anymore with the
+  addition of shell to the install OneAgent command
 
 ### Bugfixes
 
- - Fixed if statements with missing or with wrong conditions that checked for the AIX/Linux Operating System from the host facts.
+- Fixed if statements with missing or with wrong conditions that checked for the
+  AIX/Linux Operating System from the host facts.
 
 ### Known Issues
 
@@ -65,23 +70,25 @@ TBD
 
 ### Features
 
- - Add oneagentctl support
- - Add option to verify OneAgent Linux/AIX installer file signature
- - OneAgent service state can now be set using the `service_state` parameter
- - OneAgent package state can now be set using the `package_state` parameter
- - Use `reboot` module for both linux and windows reboots
- - Convert `host_metadata` string parameter to array
- - Convert `host_tags` string parameter to array
- - Following best practice, OneAgent metadata including host tags, host metadata and hostname is now set via `oneagentclt` instead of configuration files.
- - Add `download` class to separately handle OneAgent binary download
- - Add windows fact `dynatrace_oneagent_appdata`
- - Add windows fact `dynatrace_oneagent_programfiles`
+- Add oneagentctl support
+- Add option to verify OneAgent Linux/AIX installer file signature
+- OneAgent service state can now be set using the `service_state` parameter
+- OneAgent package state can now be set using the `package_state` parameter
+- Use `reboot` module for both linux and windows reboots
+- Convert `host_metadata` string parameter to array
+- Convert `host_tags` string parameter to array
+- Following best practice, OneAgent metadata including host tags, host metadata
+  and hostname is now set via `oneagentclt` instead of configuration files.
+- Add `download` class to separately handle OneAgent binary download
+- Add windows fact `dynatrace_oneagent_appdata`
+- Add windows fact `dynatrace_oneagent_programfiles`
 - Add acceptance tests using the Litmus test framework
 
 ### Bugfixes
 
- - Remove `ensure => present` from `file{ $download_path:}` resource to ensure no file is present if OneAgent installer download fails.
- - data/common.yaml file now has valid yaml
+- Remove `ensure => present` from `file{ $download_path:}` resource to ensure no
+  file is present if OneAgent installer download fails.
+- data/common.yaml file now has valid yaml
 
 ### Known Issues
 
@@ -147,8 +154,11 @@ TBD
 
 ### Features
 
-- Ability to set string values to the hostcustomproperties.conf and hostautotag.conf of the OneAgent config to add tags and metadata to a host entity.
-- Ability to override the automatically detected hostname by setting the values of the hostname.conf file and restarting the Dynatrace OneAgent service.
+- Ability to set string values to the hostcustomproperties.conf and
+  hostautotag.conf of the OneAgent config to add tags and metadata to a host
+  entity.
+- Ability to override the automatically detected hostname by setting the values
+  of the hostname.conf file and restarting the Dynatrace OneAgent service.
 
 ### Bugfixes
 
