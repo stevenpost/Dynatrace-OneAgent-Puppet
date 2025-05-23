@@ -1,3 +1,5 @@
+# @api private
+#
 # @summary
 #   This class manages the configuration of the OneAgent
 #

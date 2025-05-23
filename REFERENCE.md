@@ -6,25 +6,29 @@
 
 ### Classes
 
-* [`dynatraceoneagent`](#dynatraceoneagent): This module deploys the OneAgent on Linux, Windows and AIX Operating Systems with different available configurations and ensures
-the OneAgent service maintains a running state. It provides types/providers to interact with the various OneAgent configuration points.
-* [`dynatraceoneagent::config`](#dynatraceoneagentconfig): This class manages the configuration of the OneAgent
-* [`dynatraceoneagent::download`](#dynatraceoneagentdownload): This class downloads the OneAgent installer binary
-* [`dynatraceoneagent::install`](#dynatraceoneagentinstall): This class manages the installation of the OneAgent on the host
-* [`dynatraceoneagent::params`](#dynatraceoneagentparams): This class manages the OneAgent parameters
-* [`dynatraceoneagent::service`](#dynatraceoneagentservice): Manages the OneAgent service
-* [`dynatraceoneagent::uninstall`](#dynatraceoneagentuninstall): Uninstalls the Dynatrace OneAgent
+#### Public Classes
+
+* [`dynatraceoneagent`](#dynatraceoneagent): This module deploys the OneAgent on Linux Operating Systems with different available configurations and ensures
+the OneAgent service maintains a running state.
+
+#### Private Classes
+
+* `dynatraceoneagent::config`: This class manages the configuration of the OneAgent
+* `dynatraceoneagent::download`: This class downloads the OneAgent installer binary
+* `dynatraceoneagent::install`: This class manages the installation of the OneAgent on the host
+* `dynatraceoneagent::service`: Manages the OneAgent service
+* `dynatraceoneagent::uninstall`: Uninstalls the Dynatrace OneAgent
 
 ## Classes
 
 ### <a name="dynatraceoneagent"></a>`dynatraceoneagent`
 
-This module deploys the OneAgent on Linux, Windows and AIX Operating Systems with different available configurations and ensures
-the OneAgent service maintains a running state. It provides types/providers to interact with the various OneAgent configuration points.
+This module deploys the OneAgent on Linux Operating Systems with different available configurations and ensures
+the OneAgent service maintains a running state.
 
 #### Examples
 
-##### 
+##### Basic usage
 
 ```puppet
 class { 'dynatraceoneagent':
@@ -37,7 +41,6 @@ class { 'dynatraceoneagent':
 
 The following parameters are available in the `dynatraceoneagent` class:
 
-* [`global_mode`](#global_mode)
 * [`tenant_url`](#tenant_url)
 * [`paas_token`](#paas_token)
 * [`api_path`](#api_path)
@@ -52,12 +55,10 @@ The following parameters are available in the `dynatraceoneagent` class:
 * [`allow_insecure`](#allow_insecure)
 * [`download_options`](#download_options)
 * [`download_dir`](#download_dir)
-* [`default_install_dir`](#default_install_dir)
 * [`oneagent_params_hash`](#oneagent_params_hash)
 * [`reboot_system`](#reboot_system)
 * [`service_state`](#service_state)
 * [`manage_service`](#manage_service)
-* [`service_name`](#service_name)
 * [`package_state`](#package_state)
 * [`host_tags`](#host_tags)
 * [`host_metadata`](#host_metadata)
@@ -66,29 +67,9 @@ The following parameters are available in the `dynatraceoneagent` class:
 * [`log_monitoring`](#log_monitoring)
 * [`log_access`](#log_access)
 * [`host_group`](#host_group)
-* [`infra_only`](#infra_only)
+* [`monitoring_mode`](#monitoring_mode)
 * [`network_zone`](#network_zone)
 * [`oneagent_puppet_conf_dir`](#oneagent_puppet_conf_dir)
-* [`oneagent_ctl`](#oneagent_ctl)
-* [`provider`](#provider)
-* [`oneagent_comms_config_file`](#oneagent_comms_config_file)
-* [`oneagent_logmonitoring_config_file`](#oneagent_logmonitoring_config_file)
-* [`oneagent_logaccess_config_file`](#oneagent_logaccess_config_file)
-* [`hostgroup_config_file`](#hostgroup_config_file)
-* [`hostmetadata_config_file`](#hostmetadata_config_file)
-* [`hostautotag_config_file`](#hostautotag_config_file)
-* [`hostname_config_file`](#hostname_config_file)
-* [`oneagent_infraonly_config_file`](#oneagent_infraonly_config_file)
-* [`oneagent_networkzone_config_file`](#oneagent_networkzone_config_file)
-
-##### <a name="global_mode"></a>`global_mode`
-
-Data type: `String`
-
-Sets the permissions for any files that don't have
-this assignment either set manually or by the OneAgent installer
-
-Default value: `$dynatraceoneagent::params::global_mode`
 
 ##### <a name="tenant_url"></a>`tenant_url`
 
@@ -109,7 +90,7 @@ Data type: `String`
 
 Path of the Dynatrace OneAgent deployment API
 
-Default value: `$dynatraceoneagent::params::api_path`
+Default value: `'/api/v1/deployment/installer/agent/'`
 
 ##### <a name="version"></a>`version`
 
@@ -117,7 +98,7 @@ Data type: `String`
 
 The required version of the OneAgent in 1.155.275.20181112-084458 format
 
-Default value: `$dynatraceoneagent::params::version`
+Default value: `'latest'`
 
 ##### <a name="arch"></a>`arch`
 
@@ -125,7 +106,7 @@ Data type: `String`
 
 The architecture of your OS - default is all
 
-Default value: `$dynatraceoneagent::params::arch`
+Default value: `'all'`
 
 ##### <a name="installer_type"></a>`installer_type`
 
@@ -133,15 +114,15 @@ Data type: `String`
 
 The type of the installer - default is default
 
-Default value: `$dynatraceoneagent::params::installer_type`
+Default value: `'default'`
 
 ##### <a name="verify_signature"></a>`verify_signature`
 
-Data type: `Optional[Boolean]`
+Data type: `Boolean`
 
 Verify OneAgent installer signature (Linux only).
 
-Default value: `$dynatraceoneagent::params::verify_signature`
+Default value: ``false``
 
 ##### <a name="proxy_server"></a>`proxy_server`
 
@@ -149,39 +130,39 @@ Data type: `Optional[String]`
 
 Proxy server to be used by the archive module for downloading the OneAgent installer if needed
 
-Default value: `$dynatraceoneagent::params::proxy_server`
+Default value: ``undef``
 
 ##### <a name="download_cert_link"></a>`download_cert_link`
 
-Data type: `Optional[String]`
+Data type: `String`
 
 Link for downloading dynatrace root cert pem file
 
-Default value: `$dynatraceoneagent::params::download_cert_link`
+Default value: `'https://ca.dynatrace.com/dt-root.cert.pem'`
 
 ##### <a name="cert_file_name"></a>`cert_file_name`
 
-Data type: `Optional[String]`
+Data type: `String`
 
 Name of the downloaded cert file
 
-Default value: `$dynatraceoneagent::params::cert_file_name`
+Default value: `'dt-root.cert.pem'`
 
 ##### <a name="ca_cert_src_path"></a>`ca_cert_src_path`
 
-Data type: `Optional[String]`
+Data type: `String`
 
 Location of dynatrace root cert file in module
 
-Default value: `$dynatraceoneagent::params::ca_cert_src_path`
+Default value: `"modules/${module_name}/${cert_file_name}"`
 
 ##### <a name="allow_insecure"></a>`allow_insecure`
 
-Data type: `Optional[Boolean]`
+Data type: `Boolean`
 
 Ignore HTTPS certificate errors when using the archive module.
 
-Default value: `$dynatraceoneagent::params::allow_insecure`
+Default value: ``false``
 
 ##### <a name="download_options"></a>`download_options`
 
@@ -190,7 +171,7 @@ Data type: `Optional`
 In some cases you may need custom flags for curl/wget/s3 which can be supplied via download_options.
 Refer to [Download Customizations](https://github.com/voxpupuli/puppet-archive#download-customizations)
 
-Default value: `$dynatraceoneagent::params::download_options`
+Default value: ``undef``
 
 ##### <a name="download_dir"></a>`download_dir`
 
@@ -198,15 +179,7 @@ Data type: `String`
 
 OneAgent installer file download directory.
 
-Default value: `$dynatraceoneagent::params::download_dir`
-
-##### <a name="default_install_dir"></a>`default_install_dir`
-
-Data type: `String`
-
-OneAgent default install directory
-
-Default value: `$dynatraceoneagent::params::default_install_dir`
+Default value: `'/tmp'`
 
 ##### <a name="oneagent_params_hash"></a>`oneagent_params_hash`
 
@@ -215,7 +188,10 @@ Data type: `Hash`
 Hash map of additional parameters to pass to the installer
 Refer to the Customize OneAgent installation documentation on [Technology Support](https://www.dynatrace.com/support/help/technology-support/operating-systems/)
 
-Default value: `$dynatraceoneagent::params::oneagent_params_hash`
+Default value: `{
+    '--set-monitoring-mode'        => $monitoring_mode,
+    '--set-app-log-content-access' => $log_monitoring,
+  }`
 
 ##### <a name="reboot_system"></a>`reboot_system`
 
@@ -223,16 +199,15 @@ Data type: `Boolean`
 
 If set to true, puppet will reboot the server after installing the OneAgent - default is false
 
-Default value: `$dynatraceoneagent::params::reboot_system`
+Default value: ``false``
 
 ##### <a name="service_state"></a>`service_state`
 
-Data type: `String`
+Data type: `Enum['running','stopped']`
 
-What state the dynatrace oneagent service should be in - default is running
-Allowed values: running, stopped
+What state the dynatrace oneagent service should be in
 
-Default value: `$dynatraceoneagent::params::service_state`
+Default value: `'running'`
 
 ##### <a name="manage_service"></a>`manage_service`
 
@@ -240,101 +215,92 @@ Data type: `Boolean`
 
 Whether puppet should manage the state of the OneAgent service - default is true
 
-Default value: `$dynatraceoneagent::params::manage_service`
-
-##### <a name="service_name"></a>`service_name`
-
-Data type: `String`
-
-The name of the dynatrace OneAgent based on the OS
-
-Default value: `$dynatraceoneagent::params::service_name`
+Default value: ``true``
 
 ##### <a name="package_state"></a>`package_state`
 
-Data type: `String`
+Data type: `Enum['present','absent']`
 
-What state the dynatrace oneagent package should be in - default is present
-Allowed values: present, absent
+What state the dynatrace oneagent package should be in
 
-Default value: `$dynatraceoneagent::params::package_state`
+Default value: `'present'`
 
 ##### <a name="host_tags"></a>`host_tags`
 
-Data type: `Optional[Array]`
+Data type: `Array`
 
 Values to automatically add tags to a host,
 should contain an array of strings or key/value pairs.
 For example: ['Environment=Prod', 'Organization=D1P', 'Owner=john.doe@dynatrace.com', 'Support=https://www.dynatrace.com/support/linux']
 
-Default value: `$dynatraceoneagent::params::host_tags`
+Default value: `[]`
 
 ##### <a name="host_metadata"></a>`host_metadata`
 
-Data type: `Optional[Array]`
+Data type: `Array`
 
 Values to automatically add metadata to a host,
 Should contain an array of strings or key/value pairs.
 For example: ['LinuxHost', 'Gdansk', 'role=fallback', 'app=easyTravel']
 
-Default value: `$dynatraceoneagent::params::host_metadata`
+Default value: `[]`
 
 ##### <a name="hostname"></a>`hostname`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Overrides an automatically detected host name. Example: My App Server
 
-Default value: `$dynatraceoneagent::params::hostname`
+Default value: ``undef``
 
 ##### <a name="oneagent_communication_hash"></a>`oneagent_communication_hash`
 
-Data type: `Optional[Hash]`
+Data type: `Hash`
 
 Hash map of parameters used to change OneAgent communication settings
 Refer to Change OneAgent communication settings on [Communication Settings](https://www.dynatrace.com/support/help/shortlink/oneagentctl#change-oneagent-communication-settings)
 
-Default value: `$dynatraceoneagent::params::oneagent_communication_hash`
+Default value: `{}`
 
 ##### <a name="log_monitoring"></a>`log_monitoring`
 
-Data type: `Optional[Boolean]`
+Data type: `Boolean`
 
 Enable or disable Log Monitoring
 
-Default value: `$dynatraceoneagent::params::log_monitoring`
+Default value: ``true``
 
 ##### <a name="log_access"></a>`log_access`
 
-Data type: `Optional[Boolean]`
+Data type: `Boolean`
 
 Enable or disable access to system logs
 
-Default value: `$dynatraceoneagent::params::log_access`
+Default value: ``true``
 
 ##### <a name="host_group"></a>`host_group`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Change host group assignment
 
-Default value: `$dynatraceoneagent::params::host_group`
+Default value: ``undef``
 
-##### <a name="infra_only"></a>`infra_only`
+##### <a name="monitoring_mode"></a>`monitoring_mode`
 
-Data type: `Optional[Boolean]`
+Data type: `Enum['fullstack','infra-only','discovery']`
 
-Enable or disable Infrastructure Monitoring mode
+Set the monitoring mode
 
-Default value: `$dynatraceoneagent::params::infra_only`
+Default value: `'fullstack'`
 
 ##### <a name="network_zone"></a>`network_zone`
 
-Data type: `Optional[String]`
+Data type: `Optional[String[1]]`
 
 Set the network zone for the host
 
-Default value: `$dynatraceoneagent::params::network_zone`
+Default value: ``undef``
 
 ##### <a name="oneagent_puppet_conf_dir"></a>`oneagent_puppet_conf_dir`
 
@@ -342,117 +308,5 @@ Data type: `String`
 
 Directory puppet will use to store oneagent configurations
 
-Default value: `$dynatraceoneagent::params::oneagent_puppet_conf_dir`
-
-##### <a name="oneagent_ctl"></a>`oneagent_ctl`
-
-Data type: `String`
-
-Name of oneagentctl executable file
-
-Default value: `$dynatraceoneagent::params::oneagent_ctl`
-
-##### <a name="provider"></a>`provider`
-
-Data type: `String`
-
-The specific backend to use for this exec resource.
-
-Default value: `$dynatraceoneagent::params::provider`
-
-##### <a name="oneagent_comms_config_file"></a>`oneagent_comms_config_file`
-
-Data type: `String`
-
-Configuration file location for OneAgent communication
-
-Default value: `$dynatraceoneagent::params::oneagent_comms_config_file`
-
-##### <a name="oneagent_logmonitoring_config_file"></a>`oneagent_logmonitoring_config_file`
-
-Data type: `String`
-
-Configuration file location for OneAgent log monitoring
-
-Default value: `$dynatraceoneagent::params::oneagent_logmonitoring_config_file`
-
-##### <a name="oneagent_logaccess_config_file"></a>`oneagent_logaccess_config_file`
-
-Data type: `String`
-
-Configuration file location for OneAgent log access
-
-Default value: `$dynatraceoneagent::params::oneagent_logaccess_config_file`
-
-##### <a name="hostgroup_config_file"></a>`hostgroup_config_file`
-
-Data type: `String`
-
-Configuration file location for OneAgent host group value
-
-Default value: `$dynatraceoneagent::params::hostgroup_config_file`
-
-##### <a name="hostmetadata_config_file"></a>`hostmetadata_config_file`
-
-Data type: `String`
-
-Configuration file location for OneAgent host metadata value(s)
-
-Default value: `$dynatraceoneagent::params::hostmetadata_config_file`
-
-##### <a name="hostautotag_config_file"></a>`hostautotag_config_file`
-
-Data type: `String`
-
-Configuration file location for OneAgent host tag value(s)
-
-Default value: `$dynatraceoneagent::params::hostautotag_config_file`
-
-##### <a name="hostname_config_file"></a>`hostname_config_file`
-
-Data type: `String`
-
-Configuration file location for OneAgent host name value
-
-Default value: `$dynatraceoneagent::params::hostname_config_file`
-
-##### <a name="oneagent_infraonly_config_file"></a>`oneagent_infraonly_config_file`
-
-Data type: `String`
-
-Configuration file location for OneAgent infra only mode
-
-Default value: `$dynatraceoneagent::params::oneagent_infraonly_config_file`
-
-##### <a name="oneagent_networkzone_config_file"></a>`oneagent_networkzone_config_file`
-
-Data type: `String`
-
-Configuration file location for OneAgent network zone value
-
-Default value: `$dynatraceoneagent::params::oneagent_networkzone_config_file`
-
-### <a name="dynatraceoneagentconfig"></a>`dynatraceoneagent::config`
-
-This class manages the configuration of the OneAgent
-
-### <a name="dynatraceoneagentdownload"></a>`dynatraceoneagent::download`
-
-This class downloads the OneAgent installer binary
-
-### <a name="dynatraceoneagentinstall"></a>`dynatraceoneagent::install`
-
-This class manages the installation of the OneAgent on the host
-
-### <a name="dynatraceoneagentparams"></a>`dynatraceoneagent::params`
-
-This class manages the OneAgent parameters
-
-### <a name="dynatraceoneagentservice"></a>`dynatraceoneagent::service`
-
-Manages the OneAgent service
-
-### <a name="dynatraceoneagentuninstall"></a>`dynatraceoneagent::uninstall`
-
-Uninstalls the Dynatrace OneAgent
+Default value: `'/var/lib/dynatrace/oneagent/agent/config/puppet'`
 

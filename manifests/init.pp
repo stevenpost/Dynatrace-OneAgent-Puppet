@@ -2,7 +2,7 @@
 #   This module deploys the OneAgent on Linux Operating Systems with different available configurations and ensures
 #   the OneAgent service maintains a running state.
 #
-# @example
+# @example Basic usage
 #    class { 'dynatraceoneagent':
 #        tenant_url  => 'https://{your-environment-id}.live.dynatrace.com',
 #        paas_token  => '{your-paas-token}',

@@ -1,3 +1,5 @@
+# @api private
+#
 # @summary
 #   This class downloads the OneAgent installer binary
 #
