@@ -99,10 +99,7 @@ class dynatraceoneagent (
   Array $host_metadata                                        = [],
   Optional[String[1]] $hostname                               = undef,
   Enum['fullstack','infra-only','discovery'] $monitoring_mode = 'fullstack',
-  Hash $oneagent_params_hash                                  = {
-    '--set-monitoring-mode'        => $monitoring_mode,
-    '--set-app-log-content-access' => $log_monitoring,
-  },
+  Hash $oneagent_params_hash                                  = {},
   Optional[String[1]] $network_zone                           = undef,
   String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
 
@@ -123,6 +120,33 @@ class dynatraceoneagent (
   } else {
     $install_dir = $default_install_dir
   }
+
+  $host_group_param = $host_group ? {
+    undef   => {},
+    default => { '--set-host-group' => $host_group },
+  }
+  $hostname_param = $hostname ? {
+    undef   => {},
+    default => { '--set-host-name' => $hostname },
+  }
+  $network_zone_param = $network_zone ? {
+    undef   => {},
+    default => { '--set-network-zone' => $network_zone },
+  }
+  $log_access_param = $log_access ? {
+    false   => { '--set-system-logs-access-enabled' => 'false' },
+    default => {},
+  }
+  $monitoring_mode_param = { '--set-monitoring-mode'       => $monitoring_mode }
+  $log_monitoring_param = { '--set-app-log-content-access' => $log_monitoring }
+
+  $real_oneagent_params_hash = $oneagent_params_hash
+  + $monitoring_mode_param
+  + $log_monitoring_param
+  + $host_group_param
+  + $hostname_param
+  + $network_zone_param
+  + $log_access_param
 
   if $version == 'latest' {
     $download_link  = "${tenant_url}${api_path}${os_type}/${installer_type}/latest/?Api-Token=${paas_token}&arch=${arch}"
