@@ -10,7 +10,6 @@
 1. [Usage - Configuration options and additional functionality](#usage)
     * [Most basic OneAgent installation using a SAAS tenant](#most-basic-oneagent-installation-using-a-saas-tenant)
     * [OneAgent installation using a managed tenant with a specific version](#oneagent-installation-using-a-managed-tenant-with-a-specific-version)
-    * [Advanced configuration](#advanced-configuration)
     * [Set or update OneAgent configuration and host metadata](#set-or-update-oneagent-configuration-and-host-metadata)
 1. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 1. [Limitations - OS compatibility, etc.](#limitations)
@@ -18,7 +17,7 @@
 
 ## Module description
 
-This module deploys the [Dynatrace OneAgent] on Linux, Windows and AIX Operating
+This module deploys the [Dynatrace OneAgent] on Linux and AIX Operating
 Systems with different available configurations and ensures the OneAgent service
 maintains a running state. It provides the resource types to interact with the
 various OneAgent configuration files and the [oneagentctl].
@@ -105,7 +104,7 @@ class { 'dynatraceoneagent':
 }
 ```
 
-#### Verify Installer Signature (Linux/AIX Only)
+#### Verify Installer Signature
 
 Set the `verify_signature` parameter to `true` if the module should verify the
 signature of the OneAgent Linux/AIX installer prior to installation. If set to
@@ -122,30 +121,6 @@ class { 'dynatraceoneagent':
     verify_signature => true,
 }
 ```
-
-### Advanced configuration
-
-Download OneAgent installer to a custom directory with additional OneAgent
-install parameters and reboot server after install should be defined as follows
-(will override default install params):
-
-``` puppet
-class { 'dynatraceoneagent':
-    tenant_url            => 'https://{your-environment-id}.live.dynatrace.com',
-    paas_token            => '{your-paas-token}',
-    version               => '1.181.63.20191105-161318',
-    download_dir          => 'C:\\Download Dir',
-    reboot_system         => true,
-    oneagent_params_hash  => {
-        '--set-infra-only'             => 'false',
-        '--set-app-log-content-access' => 'true',
-        '--set-host-group'             => 'PUPPET_WINDOWS',
-        'INSTALL_PATH'                 => 'C:\\Test Directory',
-    }
-}
-```
-
-For further information on how to handle file paths on Windows, visit [Files and paths on Windows]
 
 ### Set or update OneAgent configuration and host metadata
 
@@ -214,12 +189,10 @@ pdk test unit
 [REFERENCE.md]: ./REFERENCE.md
 [puppet/archive]: https://forge.puppet.com/puppet/archive
 [puppet-labs/reboot]: https://forge.puppet.com/modules/puppetlabs/reboot
-[puppetlabs-powershell]: https://forge.puppet.com/modules/puppetlabs/powershell
 [dynatrace/dynatraceoneagent]:https://forge.puppet.com/dynatrace/dynatraceoneagent
 [Deployment API]: https://www.dynatrace.com/support/help/extend-dynatrace/dynatrace-api/environment-api/deployment/
 [Dynatrace Supported Operating Systems]:https://www.dynatrace.com/support/help/technology-support/operating-systems/
 [Deployment API - GET available versions of OneAgent]: https://www.dynatrace.com/support/help/extend-dynatrace/dynatrace-api/environment-api/deployment/oneagent/get-available-versions/
-[Files and paths on Windows]: https://puppet.com/docs/puppet/6/lang_windows_file_paths.html
 [oneagentctl]: https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/oneagent-configuration-via-command-line-interface
 [metadata.json]: ./metadata.json
 [Technology Support]: https://www.dynatrace.com/support/help/technology-support/operating-systems/
