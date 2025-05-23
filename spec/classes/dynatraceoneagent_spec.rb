@@ -30,7 +30,25 @@ describe 'dynatraceoneagent' do
             download_options: nil,
           )
       }
-      it { is_expected.not_to contain_exec('verify_oneagent_installer') }
+      it {
+        is_expected.to contain_file('/tmp/dt-root.cert.pem')
+          .with(
+            ensure: 'file',
+            mode: '0644',
+            source: 'puppet:///modules/dynatraceoneagent/dt-root.cert.pem',
+          )
+      }
+      it {
+        is_expected.to contain_exec('verify_oneagent_installer')
+          .with(
+            command: %r{cat /tmp/Dynatrace-OneAgent-Linux-latest.sh},
+            path: ['/usr/bin'],
+          )
+      }
+      it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{-CAfile /tmp/dt-root.cert.pem}) }
+      it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('File[/tmp/dt-root.cert.pem]') }
+      it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('Archive[oneagent_installer]') }
+      it { is_expected.to contain_exec('install_oneagent').that_requires('Exec[verify_oneagent_installer]') }
       it {
         is_expected.to contain_exec('install_oneagent')
           .with(
@@ -174,50 +192,25 @@ describe 'dynatraceoneagent' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_file('/root/tmp').with(ensure: 'directory') }
         it { is_expected.to contain_archive('oneagent_installer').that_requires('File[/root/tmp]') }
-
-        context 'with "verify_signature => true"' do
-          let(:params) do
-            super().merge('verify_signature' => true)
-          end
-
-          it { is_expected.to compile.with_all_deps }
-          it { is_expected.to contain_file('/root/tmp/dt-root.cert.pem') }
-          it {
-            is_expected.to contain_exec('verify_oneagent_installer')
-              .with(
-                command: %r{cat /root/tmp/Dynatrace-OneAgent-Linux-latest.sh},
-              )
-          }
-          it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{-CAfile /root/tmp/dt-root.cert.pem}) }
-          it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('File[/root/tmp/dt-root.cert.pem]') }
-        end
-      end
-
-      context 'with "verify_signature => true"' do
-        let(:params) do
-          super().merge('verify_signature' => true)
-        end
-
-        it { is_expected.to compile.with_all_deps }
-        it {
-          is_expected.to contain_file('/tmp/dt-root.cert.pem')
-            .with(
-              ensure: 'file',
-              mode: '0644',
-              source: 'puppet:///modules/dynatraceoneagent/dt-root.cert.pem',
-            )
-        }
+        it { is_expected.to contain_file('/root/tmp/dt-root.cert.pem') }
         it {
           is_expected.to contain_exec('verify_oneagent_installer')
             .with(
-              command: %r{cat /tmp/Dynatrace-OneAgent-Linux-latest.sh},
-              path: ['/usr/bin'],
+              command: %r{cat /root/tmp/Dynatrace-OneAgent-Linux-latest.sh},
             )
         }
-        it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{-CAfile /tmp/dt-root.cert.pem}) }
-        it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('File[/tmp/dt-root.cert.pem]') }
-        it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('Archive[oneagent_installer]') }
-        it { is_expected.to contain_exec('install_oneagent').that_requires('Exec[verify_oneagent_installer]') }
+        it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{-CAfile /root/tmp/dt-root.cert.pem}) }
+        it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('File[/root/tmp/dt-root.cert.pem]') }
+      end
+
+      context 'with "verify_signature => false"' do
+        let(:params) do
+          super().merge('verify_signature' => false)
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.not_to contain_exec('verify_oneagent_installer') }
+        it { is_expected.not_to contain_file('/tmp/dt-root.cert.pem') }
       end
 
       context 'with "version => 1.181.63.20191105-161318"' do
@@ -243,15 +236,7 @@ describe 'dynatraceoneagent' do
               onlyif: '/usr/bin/test -f /tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh',
             )
         }
-
-        context 'with "verify_signature => true"' do
-          let(:params) do
-            super().merge('verify_signature' => true)
-          end
-
-          it { is_expected.to compile.with_all_deps }
-          it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{cat /tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh}) }
-        end
+        it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{cat /tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh}) }
       end
 
       context 'with "allow_insecure => true"' do
