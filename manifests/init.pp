@@ -18,9 +18,9 @@
 # @param version
 #   The required version of the OneAgent in 1.155.275.20181112-084458 format
 # @param arch
-#   The architecture of your OS - default is all
+#   The architecture of your OS
 # @param installer_type
-#   The type of the installer - default is default
+#   The type of the installer
 # @param verify_signature
 #   Verify OneAgent installer signature (Linux only).
 # @param proxy_server
@@ -36,11 +36,11 @@
 #   Hash map of additional parameters to pass to the installer
 #   Refer to the Customize OneAgent installation documentation on [Technology Support](https://www.dynatrace.com/support/help/technology-support/operating-systems/)
 # @param reboot_system
-#   If set to true, puppet will reboot the server after installing the OneAgent - default is false
+#   If set to true, puppet will reboot the server after installing the OneAgent
 # @param service_state
 #   What state the dynatrace oneagent service should be in
 # @param manage_service
-#   Whether puppet should manage the state of the OneAgent service - default is true
+#   Whether puppet should manage the state of the OneAgent service
 # @param package_state
 #   What state the dynatrace oneagent package should be in
 # @param host_tags

@@ -100,7 +100,7 @@ Default value: `'latest'`
 
 Data type: `String`
 
-The architecture of your OS - default is all
+The architecture of your OS
 
 Default value: `'all'`
 
@@ -108,7 +108,7 @@ Default value: `'all'`
 
 Data type: `String`
 
-The type of the installer - default is default
+The type of the installer
 
 Default value: `'default'`
 
@@ -169,7 +169,7 @@ Default value: `{
 
 Data type: `Boolean`
 
-If set to true, puppet will reboot the server after installing the OneAgent - default is false
+If set to true, puppet will reboot the server after installing the OneAgent
 
 Default value: ``false``
 
@@ -185,7 +185,7 @@ Default value: `'running'`
 
 Data type: `Boolean`
 
-Whether puppet should manage the state of the OneAgent service - default is true
+Whether puppet should manage the state of the OneAgent service
 
 Default value: ``true``
 
