@@ -178,9 +178,11 @@ Visit [oneagentctl] for details on limitations around the OneAgent command line 
 
 ### Testing
 
-Acceptance tests for this module leverage [puppet_litmus](https://github.com/puppetlabs/puppet_litmus). To run the acceptance tests follow the instructions [here](https://puppetlabs.github.io/litmus/). You can also find a tutorial and walkthrough of using Litmus and the PDK on [YouTube](https://www.youtube.com/watch?v=FYfR7ZEGHoE).
+Unit tests can be run using pdk:
 
-An example script for running acceptance tests can be found on the [run_acc_tests.sh] file.
+```bash
+pdk test unit
+```
 
 [Dynatrace OneAgent]: https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/
 [REFERENCE.md]: ./REFERENCE.md
@@ -195,4 +197,3 @@ An example script for running acceptance tests can be found on the [run_acc_test
 [oneagentctl]: https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/oneagent-configuration-via-command-line-interface
 [metadata.json]: ./metadata.json
 [Technology Support]: https://www.dynatrace.com/support/help/technology-support/operating-systems/
-[run_acc_tests.sh]: ./scripts/run_acc_tests.sh
