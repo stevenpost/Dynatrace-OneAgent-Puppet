@@ -66,6 +66,7 @@ describe 'dynatraceoneagent' do
             mode: '0644',
           )
       }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet').that_requires('Exec[install_oneagent]') }
       it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostgroup.conf').with(ensure: 'absent') }
       it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostname.conf').with(ensure: 'absent') }
       it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/networkzone.conf').with(ensure: 'absent') }
@@ -84,6 +85,7 @@ describe 'dynatraceoneagent' do
             unless: nil,
           )
       }
+      it { is_expected.to contain_exec('set_host_group').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_hostname')
           .with(
@@ -96,6 +98,7 @@ describe 'dynatraceoneagent' do
             unless: nil,
           )
       }
+      it { is_expected.to contain_exec('set_hostname').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_monitoring_mode')
           .with(
@@ -107,6 +110,7 @@ describe 'dynatraceoneagent' do
             unless: 'oneagentctl --get-monitoring-mode | grep -q fullstack',
           )
       }
+      it { is_expected.to contain_exec('set_monitoring_mode').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_network_zone')
           .with(
@@ -119,6 +123,7 @@ describe 'dynatraceoneagent' do
             unless: nil,
           )
       }
+      it { is_expected.to contain_exec('set_network_zone').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_log_access')
           .with(
@@ -130,6 +135,7 @@ describe 'dynatraceoneagent' do
             unless: 'oneagentctl --get-system-logs-access-enabled | grep -q true',
           )
       }
+      it { is_expected.to contain_exec('set_log_access').that_requires('Exec[install_oneagent]') }
       it {
         is_expected.to contain_exec('set_log_monitoring')
           .with(
@@ -141,6 +147,7 @@ describe 'dynatraceoneagent' do
             unless: 'oneagentctl --get-app-log-content-access | grep -q true',
           )
       }
+      it { is_expected.to contain_exec('set_log_monitoring').that_requires('Exec[install_oneagent]') }
       it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf').with(ensure: 'absent') }
       it {
         is_expected.not_to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/deployment.conf')
