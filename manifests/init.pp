@@ -25,10 +25,6 @@
 #   Verify OneAgent installer signature (Linux only).
 # @param proxy_server
 #   Proxy server to be used by the archive module for downloading the OneAgent installer if needed
-# @param cert_file_name
-#   Name of the downloaded cert file
-# @param ca_cert_src_path
-#   Location of dynatrace root cert file in module
 # @param allow_insecure
 #   Ignore HTTPS certificate errors when using the archive module.
 # @param download_options
@@ -84,8 +80,6 @@ class dynatraceoneagent (
   String $installer_type                                      = 'default',
   Boolean $verify_signature                                   = false,
   Optional[String] $proxy_server                              = undef,
-  String $cert_file_name                                      = 'dt-root.cert.pem',
-  String $ca_cert_src_path                                    = "modules/${module_name}/${cert_file_name}",
   Boolean $allow_insecure                                     = false,
   Optional $download_options                                  = undef,
 
@@ -137,11 +131,10 @@ class dynatraceoneagent (
     $download_link  = "${tenant_url}${api_path}${os_type}/${installer_type}/version/${version}?Api-Token=${paas_token}&arch=${arch}"
   }
 
-  $filename                 = "Dynatrace-OneAgent-${facts['kernel']}-${version}.sh"
-  $download_path            = "${download_dir}/${filename}"
-  $dt_root_cert             = "${download_dir}/${cert_file_name}"
-  $state_file               = '/var/lib/dynatrace/oneagent/agent/config/agent.state'
-  $oneagent_tools_dir       = "${$install_dir}/agent/tools"
+  $filename           = "Dynatrace-OneAgent-${facts['kernel']}-${version}.sh"
+  $download_path      = "${download_dir}/${filename}"
+  $state_file         = '/var/lib/dynatrace/oneagent/agent/config/agent.state'
+  $oneagent_tools_dir = "${$install_dir}/agent/tools"
 
   if $package_state != 'absent' {
     contain dynatraceoneagent::install

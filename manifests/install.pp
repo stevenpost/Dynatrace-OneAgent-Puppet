@@ -11,8 +11,6 @@ class dynatraceoneagent::install {
   }
 
   $allow_insecure        = $dynatraceoneagent::allow_insecure
-  $ca_cert_src_path      = $dynatraceoneagent::ca_cert_src_path
-  $cert_file_name        = $dynatraceoneagent::cert_file_name
   $download_dir          = $dynatraceoneagent::download_dir
   $download_link         = $dynatraceoneagent::download_link
   $download_options      = $dynatraceoneagent::download_options
@@ -25,6 +23,9 @@ class dynatraceoneagent::install {
   $state_file            = $dynatraceoneagent::state_file
   $oneagent_params_hash  = $dynatraceoneagent::oneagent_params_hash
   $oneagent_params_array = $oneagent_params_hash.map |$key,$value| { "${key}=${value}" }
+
+  $cert_file_name        = 'dt-root.cert.pem'
+  $dt_root_cert          = "${download_dir}/${cert_file_name}"
 
   if $download_dir != '/tmp' {
     file { $download_dir:
@@ -46,21 +47,21 @@ class dynatraceoneagent::install {
   }
 
   if  $dynatraceoneagent::verify_signature {
-    file { $dynatraceoneagent::dt_root_cert:
+    file { $dt_root_cert:
       ensure => file,
       mode   => $global_mode,
-      source => "puppet:///${ca_cert_src_path}",
+      source => "puppet:///modules/${module_name}/${cert_file_name}",
     }
 
     $verify_signature_command = "( echo 'Content-Type: multipart/signed; protocol=\"application/x-pkcs7-signature\"; micalg=\"sha-256\";\
      boundary=\"--SIGNED-INSTALLER\"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; \
-     cat ${download_path} ) | openssl cms -verify -CAfile ${dynatraceoneagent::dt_root_cert} > /dev/null"
+     cat ${download_path} ) | openssl cms -verify -CAfile ${dt_root_cert} > /dev/null"
 
     exec { 'verify_oneagent_installer':
       command => $verify_signature_command,
       path    => ['/usr/bin'],
       require => [
-        File[$dynatraceoneagent::dt_root_cert],
+        File[$dt_root_cert],
         Archive['oneagent_installer'],
       ],
       before  => Exec['install_oneagent'],
