@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.9.2
+
+### Bugfixes
+
+- Fix statefile location
+
+## Release 1.9.1
+
+### Bugfixes
+
+- Fixed uninstall logic
+
 ## Release 1.9.0
 
 ### Features
