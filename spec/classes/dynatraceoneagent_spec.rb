@@ -155,6 +155,17 @@ describe 'dynatraceoneagent' do
       }
       it { is_expected.to contain_exec('set_oneagent_communication').with(refreshonly: true) }
 
+      it {
+        is_expected.to contain_service('oneagent')
+          .with(
+            ensure: 'running',
+            enable: true,
+            hasstatus: true,
+            hasrestart: true,
+          )
+      }
+      it { is_expected.to contain_service('oneagent').that_requires('Exec[install_oneagent]') }
+
       context 'with "download_dir => /root/tmp"' do
         let(:params) do
           super().merge('download_dir' => '/root/tmp')
@@ -260,6 +271,24 @@ describe 'dynatraceoneagent' do
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_exec('install_oneagent').that_notifies('Reboot[after]') }
         it { is_expected.to contain_reboot('after') }
+      end
+
+      context 'with "service_state => stopped"' do
+        let(:params) do
+          super().merge('service_state' => 'stopped')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_service('oneagent').with(ensure: 'stopped') }
+      end
+
+      context 'with "manage_service => false"' do
+        let(:params) do
+          super().merge('manage_service' => false)
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.not_to contain_service('oneagent') }
       end
 
       context 'with "host_group => testgroup"' do
