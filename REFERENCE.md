@@ -23,7 +23,7 @@ the OneAgent service maintains a running state.
 
 #### Examples
 
-##### 
+##### Basic usage
 
 ```puppet
 class { 'dynatraceoneagent':
