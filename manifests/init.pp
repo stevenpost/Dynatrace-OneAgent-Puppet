@@ -156,7 +156,5 @@ class dynatraceoneagent (
     -> Class['dynatraceoneagent::service']
   } else {
     contain dynatraceoneagent::uninstall
-
-    Class['dynatraceoneagent::uninstall']
   }
 }
