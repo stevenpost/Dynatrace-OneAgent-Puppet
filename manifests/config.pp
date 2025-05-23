@@ -69,16 +69,17 @@ class dynatraceoneagent::config {
     }
   }
 
-  file { $oneagent_logmonitoring_config_file:
-    ensure => absent,
-  }
-
-  file { $oneagent_logaccess_config_file:
-    ensure => absent,
-  }
-
-  file { $hostgroup_config_file:
-    ensure => absent,
+  [
+    $oneagent_logmonitoring_config_file,
+    $oneagent_logaccess_config_file,
+    $hostgroup_config_file,
+    $hostname_config_file,
+    $oneagent_infraonly_config_file,
+    $oneagent_networkzone_config_file,
+  ].each |$file| {
+    file { $file:
+      ensure => absent,
+    }
   }
 
   if $host_tags.length > 0 {
@@ -107,18 +108,6 @@ class dynatraceoneagent::config {
       ensure => absent,
       notify => Exec['unset_host_metadata'],
     }
-  }
-
-  file { $hostname_config_file:
-    ensure => absent,
-  }
-
-  file { $oneagent_infraonly_config_file:
-    ensure => absent,
-  }
-
-  file { $oneagent_networkzone_config_file:
-    ensure => absent,
   }
 
   exec { 'set_oneagent_communication':
