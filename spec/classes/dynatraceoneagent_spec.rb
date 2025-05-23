@@ -202,6 +202,40 @@ describe 'dynatraceoneagent' do
         it { is_expected.to contain_exec('install_oneagent').that_requires('Exec[verify_oneagent_installer]') }
       end
 
+      context 'with "version => 1.181.63.20191105-161318"' do
+        let(:params) do
+          super().merge('version' => '1.181.63.20191105-161318')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_archive('oneagent_installer')
+            .with(
+              source: 'https://live.dynatrace.com/api/v1/deployment/installer/agent/unix/default/version/1.181.63.20191105-161318?Api-Token=my_paas_token&arch=all',
+            )
+        }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('/tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh')
+        end
+        it {
+          is_expected.to contain_exec('delete_oneagent_installer_script')
+            .with(
+              command: 'rm /tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh',
+              onlyif: '/usr/bin/test -f /tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh',
+            )
+        }
+
+        context 'with "verify_signature => true"' do
+          let(:params) do
+            super().merge('verify_signature' => true)
+          end
+
+          it { is_expected.to compile.with_all_deps }
+          it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{cat /tmp/Dynatrace-OneAgent-Linux-1.181.63.20191105-161318.sh}) }
+        end
+      end
+
       context 'with "reboot_system => true"' do
         let(:params) do
           super().merge('reboot_system' => true)
