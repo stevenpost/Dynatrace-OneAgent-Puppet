@@ -17,7 +17,7 @@ describe 'dynatraceoneagent' do
       it { is_expected.to compile.with_all_deps }
       it { is_expected.not_to contain_file('/tmp') }
       it {
-        is_expected.to contain_archive('Dynatrace-OneAgent-Linux-latest.sh')
+        is_expected.to contain_archive('oneagent_installer')
           .with(
             ensure: 'present',
             extract: false,
@@ -46,7 +46,7 @@ describe 'dynatraceoneagent' do
             logoutput: 'on_failure',
           )
       }
-      it { is_expected.to contain_exec('install_oneagent').that_requires('Archive[Dynatrace-OneAgent-Linux-latest.sh]') }
+      it { is_expected.to contain_exec('install_oneagent').that_requires('Archive[oneagent_installer]') }
       it {
         is_expected.to contain_exec('delete_oneagent_installer_script')
           .with(
@@ -155,10 +155,7 @@ describe 'dynatraceoneagent' do
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_file('/root/tmp').with(ensure: 'directory') }
-        it {
-          is_expected.to contain_archive('Dynatrace-OneAgent-Linux-latest.sh')
-            .that_requires('File[/root/tmp]')
-        }
+        it { is_expected.to contain_archive('oneagent_installer').that_requires('File[/root/tmp]') }
       end
 
       context 'with "verify_signature => true"' do
@@ -176,9 +173,6 @@ describe 'dynatraceoneagent' do
             )
         }
         it {
-          is_expected.to contain_archive('Dynatrace-OneAgent-Linux-latest.sh')
-        }
-        it {
           is_expected.to contain_exec('verify_oneagent_installer')
             .with(
               command: %r{cat /tmp/Dynatrace-OneAgent-Linux-latest.sh},
@@ -187,7 +181,7 @@ describe 'dynatraceoneagent' do
         }
         it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{-CAfile /tmp/dt-root.cert.pem}) }
         it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('File[/tmp/dt-root.cert.pem]') }
-        it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('Archive[Dynatrace-OneAgent-Linux-latest.sh]') }
+        it { is_expected.to contain_exec('verify_oneagent_installer').that_requires('Archive[oneagent_installer]') }
         it { is_expected.to contain_exec('install_oneagent').that_requires('Exec[verify_oneagent_installer]') }
       end
 

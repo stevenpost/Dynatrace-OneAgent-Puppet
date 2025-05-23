@@ -30,11 +30,11 @@ class dynatraceoneagent::install {
   if $download_dir != '/tmp' {
     file { $download_dir:
       ensure => directory,
-      before => Archive[$filename],
+      before => Archive['oneagent_installer'],
     }
   }
 
-  archive { $filename:
+  archive { 'oneagent_installer':
     ensure           => present,
     extract          => false,
     source           => $download_link,
@@ -62,7 +62,7 @@ class dynatraceoneagent::install {
       path    => ['/usr/bin'],
       require => [
         File[$dynatraceoneagent::dt_root_cert],
-        Archive[$filename],
+        Archive['oneagent_installer'],
       ],
       before  => Exec['install_oneagent'],
     }
@@ -76,7 +76,7 @@ class dynatraceoneagent::install {
     timeout   => 6000,
     creates   => $state_file,
     logoutput => on_failure,
-    require   => Archive[$filename],
+    require   => Archive['oneagent_installer'],
   }
 
   exec { 'delete_oneagent_installer_script':
