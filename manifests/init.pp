@@ -111,7 +111,6 @@ class dynatraceoneagent (
   $default_install_dir = '/opt/dynatrace/oneagent'
   $global_owner = 'root'
   $global_group = 'root'
-  $require_value = Exec['install_oneagent']
 
   if $facts['kernel'] == 'Linux' {
     $os_type = 'unix'
