@@ -243,6 +243,15 @@ describe 'dynatraceoneagent' do
         end
       end
 
+      context 'with "allow_insecure => true"' do
+        let(:params) do
+          super().merge('allow_insecure' => true)
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_archive('oneagent_installer').with(allow_insecure: true) }
+      end
+
       context 'with "reboot_system => true"' do
         let(:params) do
           super().merge('reboot_system' => true)
