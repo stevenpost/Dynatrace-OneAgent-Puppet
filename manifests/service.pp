@@ -9,9 +9,14 @@ class dynatraceoneagent::service {
   $manage_service = $dynatraceoneagent::manage_service
 
   if $manage_service {
+    $service_enable = $service_state ? {
+      'running' => true,
+      default   => false,
+    }
+
     service { 'oneagent':
       ensure     => $service_state,
-      enable     => true,
+      enable     => $service_enable,
       hasstatus  => true,
       hasrestart => true,
       require    => $require_value,

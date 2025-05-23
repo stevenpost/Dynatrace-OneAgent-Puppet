@@ -279,7 +279,7 @@ describe 'dynatraceoneagent' do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_service('oneagent').with(ensure: 'stopped') }
+        it { is_expected.to contain_service('oneagent').with(ensure: 'stopped', enable: false) }
       end
 
       context 'with "manage_service => false"' do
