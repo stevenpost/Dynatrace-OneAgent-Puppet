@@ -78,7 +78,7 @@ class dynatraceoneagent (
   String $version                                             = 'latest',
   String $arch                                                = 'all',
   String $installer_type                                      = 'default',
-  Boolean $verify_signature                                   = false,
+  Boolean $verify_signature                                   = true,
   Optional[String] $proxy_server                              = undef,
   Boolean $allow_insecure                                     = false,
   Optional $download_options                                  = undef,

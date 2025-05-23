@@ -118,7 +118,7 @@ Data type: `Boolean`
 
 Verify OneAgent installer signature (Linux only).
 
-Default value: ``false``
+Default value: ``true``
 
 ##### <a name="proxy_server"></a>`proxy_server`
 
