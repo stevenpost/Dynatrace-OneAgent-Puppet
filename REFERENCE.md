@@ -160,10 +160,7 @@ Data type: `Hash`
 Hash map of additional parameters to pass to the installer
 Refer to the Customize OneAgent installation documentation on [Technology Support](https://www.dynatrace.com/support/help/technology-support/operating-systems/)
 
-Default value: `{
-    '--set-monitoring-mode'        => $monitoring_mode,
-    '--set-app-log-content-access' => $log_monitoring,
-  }`
+Default value: `{}`
 
 ##### <a name="reboot_system"></a>`reboot_system`
 
