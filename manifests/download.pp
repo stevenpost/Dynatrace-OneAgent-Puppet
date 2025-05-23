@@ -19,12 +19,7 @@ class dynatraceoneagent::download {
   $download_cert_link   = $dynatraceoneagent::download_cert_link
   $cert_file_name       = $dynatraceoneagent::cert_file_name
   $ca_cert_src_path     = $dynatraceoneagent::ca_cert_src_path
-  $oneagent_params_hash = $dynatraceoneagent::oneagent_params_hash
-  $reboot_system        = $dynatraceoneagent::reboot_system
-  $service_name         = $dynatraceoneagent::service_name
   $package_state        = $dynatraceoneagent::package_state
-  $global_owner         = $dynatraceoneagent::global_owner
-  $global_group         = $dynatraceoneagent::global_group
   $global_mode          = $dynatraceoneagent::global_mode
 
   if $package_state != 'absent' {

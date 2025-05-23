@@ -8,9 +8,6 @@
 #        paas_token  => '{your-paas-token}',
 #    }
 #
-# @param global_mode
-#   Sets the permissions for any files that don't have
-#   this assignment either set manually or by the OneAgent installer
 # @param tenant_url
 #   URL of your dynatrace Tenant
 #   Managed `https://{your-domain}/e/{your-environment-id}` - SaaS `https://{your-environment-id}.live.dynatrace.com`
@@ -41,8 +38,6 @@
 #   Refer to [Download Customizations](https://github.com/voxpupuli/puppet-archive#download-customizations)
 # @param download_dir
 #   OneAgent installer file download directory.
-# @param default_install_dir
-#   OneAgent default install directory
 # @param oneagent_params_hash
 #   Hash map of additional parameters to pass to the installer
 #   Refer to the Customize OneAgent installation documentation on [Technology Support](https://www.dynatrace.com/support/help/technology-support/operating-systems/)
@@ -52,8 +47,6 @@
 #   What state the dynatrace oneagent service should be in
 # @param manage_service
 #   Whether puppet should manage the state of the OneAgent service - default is true
-# @param service_name
-#   The name of the dynatrace OneAgent based on the OS
 # @param package_state
 #   What state the dynatrace oneagent package should be in
 # @param host_tags
@@ -85,7 +78,6 @@
 class dynatraceoneagent (
   String $tenant_url,
   String $paas_token,
-  String $global_mode                                         = '0644',
 
   # OneAgent Download Parameters
   String $api_path                                            = '/api/v1/deployment/installer/agent/',
@@ -102,12 +94,6 @@ class dynatraceoneagent (
 
   # OneAgent Install Parameters
   String $download_dir                                        = '/tmp',
-  String $service_name                                        = 'oneagent',
-  String $default_install_dir                                 = '/opt/dynatrace/oneagent',
-  Hash $oneagent_params_hash                                  = {
-    '--set-infra-only'             => 'false',
-    '--set-app-log-content-access' => 'true',
-  },
   Boolean $reboot_system                                      = false,
   Enum['running','stopped'] $service_state                    = 'running',
   Boolean $manage_service                                     = true,
@@ -115,17 +101,23 @@ class dynatraceoneagent (
 
   # OneAgent Host Configuration Parameters
   Hash $oneagent_communication_hash                           = {},
-  Optional[Boolean] $log_monitoring                           = undef,
-  Optional[Boolean] $log_access                               = undef,
-  Optional[String] $host_group                                = undef,
+  Boolean $log_monitoring                                     = true,
+  Boolean $log_access                                         = true,
+  Optional[String[1]] $host_group                             = undef,
   Array $host_tags                                            = [],
   Array $host_metadata                                        = [],
-  Optional[String] $hostname                                  = undef,
+  Optional[String[1]] $hostname                               = undef,
   Enum['fullstack','infra-only','discovery'] $monitoring_mode = 'fullstack',
-  Optional[String] $network_zone                              = undef,
+  Hash $oneagent_params_hash                                  = {
+    '--set-monitoring-mode'        => $monitoring_mode,
+    '--set-app-log-content-access' => $log_monitoring,
+  },
+  Optional[String[1]] $network_zone                           = undef,
   String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
 
 ) {
+  $global_mode = '0644'
+  $default_install_dir = '/opt/dynatrace/oneagent'
   $global_owner = 'root'
   $global_group = 'root'
   $require_value = Exec['install_oneagent']
@@ -151,9 +143,6 @@ class dynatraceoneagent (
   $filename                 = "Dynatrace-OneAgent-${facts['kernel']}-${version}.sh"
   $download_path            = "${download_dir}/${filename}"
   $dt_root_cert             = "${download_dir}/${cert_file_name}"
-  $oneagent_params_array    = $oneagent_params_hash.map |$key,$value| { "${key}=${value}" }
-  $oneagent_unix_params     = join($oneagent_params_array, ' ' )
-  $command                  = "/bin/sh ${download_path} ${oneagent_unix_params}"
   $state_file               = '/var/lib/dynatrace/oneagent/agent/config/agent.state'
   $oneagent_tools_dir       = "${$install_dir}/agent/tools"
 

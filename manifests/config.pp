@@ -5,7 +5,6 @@ class dynatraceoneagent::config {
   $global_owner                        = $dynatraceoneagent::global_owner
   $global_group                        = $dynatraceoneagent::global_group
   $global_mode                         = $dynatraceoneagent::global_mode
-  $service_name                        = $dynatraceoneagent::service_name
   $install_dir                         = $dynatraceoneagent::install_dir
   $state_file                          = $dynatraceoneagent::state_file
   $package_state                       = $dynatraceoneagent::package_state
@@ -58,9 +57,11 @@ class dynatraceoneagent::config {
   if $oneagent_communication_array.length > 0 {
     file { $oneagent_comms_config_file:
       ensure  => file,
-      content => String($oneagent_communication_hash),
+      owner   => $global_owner,
+      group   => $global_group,
+      content => Sensitive(String($oneagent_communication_hash)),
       notify  => Exec['set_oneagent_communication'],
-      mode    => $global_mode,
+      mode    => '0640',
     }
   } else {
     file { $oneagent_comms_config_file:
@@ -68,43 +69,16 @@ class dynatraceoneagent::config {
     }
   }
 
-  if $log_monitoring != undef {
-    file { $oneagent_logmonitoring_config_file:
-      ensure  => file,
-      content => String($log_monitoring),
-      notify  => Exec['set_log_monitoring'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $oneagent_logmonitoring_config_file:
+  [
+    $oneagent_logmonitoring_config_file,
+    $oneagent_logaccess_config_file,
+    $hostgroup_config_file,
+    $hostname_config_file,
+    $oneagent_infraonly_config_file,
+    $oneagent_networkzone_config_file,
+  ].each |$file| {
+    file { $file:
       ensure => absent,
-    }
-  }
-
-  if $log_access != undef {
-    file { $oneagent_logaccess_config_file:
-      ensure  => file,
-      content => String($log_access),
-      notify  => Exec['set_log_access'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $oneagent_logaccess_config_file:
-      ensure => absent,
-    }
-  }
-
-  if $host_group {
-    file { $hostgroup_config_file:
-      ensure  => file,
-      content => $host_group,
-      notify  => Exec['set_host_group'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $hostgroup_config_file:
-      ensure => absent,
-      notify => Exec['unset_host_group'],
     }
   }
 
@@ -136,38 +110,6 @@ class dynatraceoneagent::config {
     }
   }
 
-  if $hostname {
-    file { $hostname_config_file:
-      ensure  => file,
-      content => $hostname,
-      notify  => Exec['set_hostname'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $hostname_config_file:
-      ensure => absent,
-      notify => Exec['unset_hostname'],
-    }
-  }
-
-  file { $oneagent_infraonly_config_file:
-    ensure => absent,
-  }
-
-  if $network_zone {
-    file { $oneagent_networkzone_config_file:
-      ensure  => file,
-      content => $network_zone,
-      notify  => Exec['set_network_zone'],
-      mode    => $global_mode,
-    }
-  } else {
-    file { $oneagent_networkzone_config_file:
-      ensure => absent,
-      notify => Exec['unset_network_zone'],
-    }
-  }
-
   exec { 'set_oneagent_communication':
     command     => "${oactl} ${oneagent_communication_params} --restart-service",
     path        => $oneagentctl_exec_path,
@@ -178,39 +120,40 @@ class dynatraceoneagent::config {
   }
 
   exec { 'set_log_monitoring':
-    command     => "${oactl} --set-app-log-content-access=${log_monitoring} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+    command   => "${oactl} --set-app-log-content-access=${log_monitoring} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    unless    => "${oactl} --get-app-log-content-access | grep -q ${log_monitoring}",
   }
 
   exec { 'set_log_access':
-    command     => "${oactl} --set-system-logs-access-enabled=${log_access} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+    command   => "${oactl} --set-system-logs-access-enabled=${log_access} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    unless    => "${oactl} --get-system-logs-access-enabled | grep -q ${log_access}",
+  }
+
+  if $host_group == undef {
+    $_host_group_onlyif = "[ \$(${oactl} --get-host-group) ]"
+    $_host_group_unless = undef
+  }
+  else {
+    $_host_group_onlyif = undef
+    $_host_group_unless = "${oactl} --get-host-group | grep -q '^${host_group}$'"
   }
 
   exec { 'set_host_group':
-    command     => "${oactl} --set-host-group=${host_group} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
-  }
-
-  exec { 'unset_host_group':
-    command     => "${oactl} --set-host-group= --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+    command   => "${oactl} --set-host-group=${host_group} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    onlyif    => $_host_group_onlyif,
+    unless    => $_host_group_unless,
   }
 
   exec { 'set_host_tags':
@@ -249,22 +192,23 @@ class dynatraceoneagent::config {
     refreshonly => true,
   }
 
-  exec { 'set_hostname':
-    command     => "${oactl} --set-host-name=${hostname} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  if $hostname == undef {
+    $_hostname_onlyif = "[ \$(${oactl} --get-host-name) ]"
+    $_hostname_unless = undef
+  }
+  else {
+    $_hostname_onlyif = undef
+    $_hostname_unless = "${oactl} --get-host-name | grep -q '^${hostname}$'"
   }
 
-  exec { 'unset_hostname':
-    command     => "${oactl} --set-host-name=\"\" --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  exec { 'set_hostname':
+    command   => "${oactl} --set-host-name=${hostname} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    onlyif    => $_hostname_onlyif,
+    unless    => $_hostname_unless,
   }
 
   exec { 'set_monitoring_mode':
@@ -276,21 +220,22 @@ class dynatraceoneagent::config {
     unless    => "${oactl} --get-monitoring-mode | grep -q ${monitoring_mode}",
   }
 
-  exec { 'set_network_zone':
-    command     => "${oactl} --set-network-zone=${network_zone} --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  if $network_zone == undef {
+    $_network_zone_onlyif = "[ \$(${oactl} --get-network-zone) ]"
+    $_network_zone_unless = undef
+  }
+  else {
+    $_network_zone_onlyif = undef
+    $_network_zone_unless = "${oactl} --get-network-zone | grep -q '^${network_zone}$'"
   }
 
-  exec { 'unset_network_zone':
-    command     => "${oactl} --set-network-zone=\"\" --restart-service",
-    path        => $oneagentctl_exec_path,
-    cwd         => $oneagent_tools_dir,
-    timeout     => 6000,
-    logoutput   => on_failure,
-    refreshonly => true,
+  exec { 'set_network_zone':
+    command   => "${oactl} --set-network-zone=${network_zone} --restart-service",
+    path      => $oneagentctl_exec_path,
+    cwd       => $oneagent_tools_dir,
+    timeout   => 6000,
+    logoutput => on_failure,
+    onlyif    => $_network_zone_onlyif,
+    unless    => $_network_zone_unless,
   }
 }

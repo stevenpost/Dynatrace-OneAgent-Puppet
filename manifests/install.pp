@@ -4,16 +4,15 @@
 class dynatraceoneagent::install {
   $state_file               = $dynatraceoneagent::state_file
   $download_dir             = $dynatraceoneagent::download_dir
-  $filename                 = $dynatraceoneagent::filename
   $download_path            = $dynatraceoneagent::download_path
-  $oneagent_params_hash     = $dynatraceoneagent::oneagent_params_hash
   $reboot_system            = $dynatraceoneagent::reboot_system
-  $service_name             = $dynatraceoneagent::service_name
-  $package_state            = $dynatraceoneagent::package_state
-  $oneagent_puppet_conf_dir = $dynatraceoneagent::oneagent_puppet_conf_dir
+  $oneagent_params_hash     = $dynatraceoneagent::oneagent_params_hash
+  $oneagent_params_array    = $oneagent_params_hash.map |$key,$value| { "${key}=${value}" }
+
+  $install_command_array = ['/bin/sh', $download_path] + $oneagent_params_array
 
   exec { 'install_oneagent':
-    command   => $dynatraceoneagent::command,
+    command   => $install_command_array,
     cwd       => $download_dir,
     timeout   => 6000,
     creates   => $state_file,
