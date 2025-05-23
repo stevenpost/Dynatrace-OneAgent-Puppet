@@ -15,6 +15,7 @@ describe 'dynatraceoneagent' do
       end
 
       it { is_expected.to compile.with_all_deps }
+      it { is_expected.not_to contain_file('/tmp') }
       it {
         is_expected.to contain_exec('install_oneagent')
           .with(
@@ -161,6 +162,19 @@ describe 'dynatraceoneagent' do
             refreshonly: true,
           )
       }
+
+      context 'with "download_dir => /root/tmp"' do
+        let(:params) do
+          super().merge('download_dir' => '/root/tmp')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_file('/root/tmp').with(ensure: 'directory') }
+        it {
+          is_expected.to contain_archive('Dynatrace-OneAgent-Linux-latest.sh')
+            .that_requires('File[/root/tmp]')
+        }
+      end
 
       context 'with "reboot_system => true"' do
         let(:params) do

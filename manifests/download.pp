@@ -24,8 +24,11 @@ class dynatraceoneagent::download {
   $package_state        = $dynatraceoneagent::package_state
   $global_mode          = $dynatraceoneagent::global_mode
 
-  file { $download_dir:
-    ensure => directory,
+  if $download_dir != '/tmp' {
+    file { $download_dir:
+      ensure => directory,
+      before => Archive[$filename],
+    }
   }
 
   archive { $filename:
@@ -34,7 +37,6 @@ class dynatraceoneagent::download {
     source           => $download_link,
     path             => $download_path,
     allow_insecure   => $allow_insecure,
-    require          => File[$download_dir],
     creates          => $state_file,
     proxy_server     => $proxy_server,
     cleanup          => false,
