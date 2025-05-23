@@ -1,3 +1,5 @@
+# @api private
+#
 # @summary
 #   This class manages the installation of the OneAgent on the host
 #

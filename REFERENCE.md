@@ -6,13 +6,18 @@
 
 ### Classes
 
+#### Public Classes
+
 * [`dynatraceoneagent`](#dynatraceoneagent): This module deploys the OneAgent on Linux Operating Systems with different available configurations and ensures
 the OneAgent service maintains a running state.
-* [`dynatraceoneagent::config`](#dynatraceoneagentconfig): This class manages the configuration of the OneAgent
-* [`dynatraceoneagent::download`](#dynatraceoneagentdownload): This class downloads the OneAgent installer binary
-* [`dynatraceoneagent::install`](#dynatraceoneagentinstall): This class manages the installation of the OneAgent on the host
-* [`dynatraceoneagent::service`](#dynatraceoneagentservice): Manages the OneAgent service
-* [`dynatraceoneagent::uninstall`](#dynatraceoneagentuninstall): Uninstalls the Dynatrace OneAgent
+
+#### Private Classes
+
+* `dynatraceoneagent::config`: This class manages the configuration of the OneAgent
+* `dynatraceoneagent::download`: This class downloads the OneAgent installer binary
+* `dynatraceoneagent::install`: This class manages the installation of the OneAgent on the host
+* `dynatraceoneagent::service`: Manages the OneAgent service
+* `dynatraceoneagent::uninstall`: Uninstalls the Dynatrace OneAgent
 
 ## Classes
 
@@ -304,24 +309,4 @@ Data type: `String`
 Directory puppet will use to store oneagent configurations
 
 Default value: `'/var/lib/dynatrace/oneagent/agent/config/puppet'`
-
-### <a name="dynatraceoneagentconfig"></a>`dynatraceoneagent::config`
-
-This class manages the configuration of the OneAgent
-
-### <a name="dynatraceoneagentdownload"></a>`dynatraceoneagent::download`
-
-This class downloads the OneAgent installer binary
-
-### <a name="dynatraceoneagentinstall"></a>`dynatraceoneagent::install`
-
-This class manages the installation of the OneAgent on the host
-
-### <a name="dynatraceoneagentservice"></a>`dynatraceoneagent::service`
-
-Manages the OneAgent service
-
-### <a name="dynatraceoneagentuninstall"></a>`dynatraceoneagent::uninstall`
-
-Uninstalls the Dynatrace OneAgent
 

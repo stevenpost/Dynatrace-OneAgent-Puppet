@@ -1,3 +1,5 @@
+# @api private
+#
 # @summary
 #   Manages the OneAgent service
 #

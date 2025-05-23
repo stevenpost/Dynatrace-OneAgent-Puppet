@@ -1,3 +1,5 @@
+# @api private
+#
 # @summary
 #   Uninstalls the Dynatrace OneAgent
 #
