@@ -25,8 +25,6 @@
 #   Verify OneAgent installer signature (Linux only).
 # @param proxy_server
 #   Proxy server to be used by the archive module for downloading the OneAgent installer if needed
-# @param download_cert_link
-#   Link for downloading dynatrace root cert pem file
 # @param cert_file_name
 #   Name of the downloaded cert file
 # @param ca_cert_src_path
@@ -86,7 +84,6 @@ class dynatraceoneagent (
   String $installer_type                                      = 'default',
   Boolean $verify_signature                                   = false,
   Optional[String] $proxy_server                              = undef,
-  String $download_cert_link                                  = 'https://ca.dynatrace.com/dt-root.cert.pem',
   String $cert_file_name                                      = 'dt-root.cert.pem',
   String $ca_cert_src_path                                    = "modules/${module_name}/${cert_file_name}",
   Boolean $allow_insecure                                     = false,

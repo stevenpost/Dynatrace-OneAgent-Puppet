@@ -48,7 +48,6 @@ The following parameters are available in the `dynatraceoneagent` class:
 * [`installer_type`](#installer_type)
 * [`verify_signature`](#verify_signature)
 * [`proxy_server`](#proxy_server)
-* [`download_cert_link`](#download_cert_link)
 * [`cert_file_name`](#cert_file_name)
 * [`ca_cert_src_path`](#ca_cert_src_path)
 * [`allow_insecure`](#allow_insecure)
@@ -130,14 +129,6 @@ Data type: `Optional[String]`
 Proxy server to be used by the archive module for downloading the OneAgent installer if needed
 
 Default value: ``undef``
-
-##### <a name="download_cert_link"></a>`download_cert_link`
-
-Data type: `String`
-
-Link for downloading dynatrace root cert pem file
-
-Default value: `'https://ca.dynatrace.com/dt-root.cert.pem'`
 
 ##### <a name="cert_file_name"></a>`cert_file_name`
 

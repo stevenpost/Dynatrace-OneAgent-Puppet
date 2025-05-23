@@ -13,7 +13,6 @@ class dynatraceoneagent::install {
   $allow_insecure        = $dynatraceoneagent::allow_insecure
   $ca_cert_src_path      = $dynatraceoneagent::ca_cert_src_path
   $cert_file_name        = $dynatraceoneagent::cert_file_name
-  $download_cert_link    = $dynatraceoneagent::download_cert_link
   $download_dir          = $dynatraceoneagent::download_dir
   $download_link         = $dynatraceoneagent::download_link
   $download_options      = $dynatraceoneagent::download_options
