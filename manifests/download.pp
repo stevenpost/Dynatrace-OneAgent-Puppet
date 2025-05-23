@@ -45,10 +45,9 @@ class dynatraceoneagent::download {
 
   if  $dynatraceoneagent::verify_signature {
     file { $dynatraceoneagent::dt_root_cert:
-      ensure  => file,
-      mode    => $global_mode,
-      source  => "puppet:///${ca_cert_src_path}",
-      require => File[$download_dir],
+      ensure => file,
+      mode   => $global_mode,
+      source => "puppet:///${ca_cert_src_path}",
     }
 
     $verify_signature_command = "( echo 'Content-Type: multipart/signed; protocol=\"application/x-pkcs7-signature\"; micalg=\"sha-256\";\
@@ -57,6 +56,7 @@ class dynatraceoneagent::download {
 
     exec { 'delete_oneagent_installer_script':
       command   => "rm ${$download_path} ${dynatraceoneagent::dt_root_cert}",
+      path      => ['/usr/bin'],
       cwd       => $download_dir,
       timeout   => 6000,
       logoutput => on_failure,

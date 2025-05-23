@@ -176,6 +176,34 @@ describe 'dynatraceoneagent' do
         }
       end
 
+      context 'with "verify_signature => true"' do
+        let(:params) do
+          super().merge('verify_signature' => true)
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_file('/tmp/dt-root.cert.pem')
+            .with(
+              ensure: 'file',
+              mode: '0644',
+              source: 'puppet:///modules/dynatraceoneagent/dt-root.cert.pem',
+            )
+        }
+        it {
+          is_expected.to contain_archive('Dynatrace-OneAgent-Linux-latest.sh')
+        }
+        it {
+          is_expected.to contain_exec('delete_oneagent_installer_script')
+            .with(
+              command: 'rm /tmp/Dynatrace-OneAgent-Linux-latest.sh /tmp/dt-root.cert.pem',
+              path: ['/usr/bin'],
+            )
+        }
+        it { is_expected.to contain_exec('delete_oneagent_installer_script').that_requires('File[/tmp/dt-root.cert.pem]') }
+        it { is_expected.to contain_exec('delete_oneagent_installer_script').that_requires('Archive[Dynatrace-OneAgent-Linux-latest.sh]') }
+      end
+
       context 'with "reboot_system => true"' do
         let(:params) do
           super().merge('reboot_system' => true)
