@@ -57,18 +57,14 @@ class dynatraceoneagent::install {
      boundary=\"--SIGNED-INSTALLER\"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; \
      cat ${download_path} ) | openssl cms -verify -CAfile ${dynatraceoneagent::dt_root_cert} > /dev/null"
 
-    exec { 'delete_oneagent_installer_script':
-      command   => "rm ${$download_path} ${dynatraceoneagent::dt_root_cert}",
-      path      => ['/usr/bin'],
-      cwd       => $download_dir,
-      timeout   => 6000,
-      logoutput => on_failure,
-      unless    => $verify_signature_command,
-      require   => [
+    exec { 'verify_oneagent_installer':
+      command => $verify_signature_command,
+      path    => ['/usr/bin'],
+      require => [
         File[$dynatraceoneagent::dt_root_cert],
         Archive[$filename],
       ],
-      creates   => $state_file,
+      before  => Exec['install_oneagent'],
     }
   }
 
@@ -80,6 +76,14 @@ class dynatraceoneagent::install {
     timeout   => 6000,
     creates   => $state_file,
     logoutput => on_failure,
+    require   => Archive[$filename],
+  }
+
+  exec { 'delete_oneagent_installer_script':
+    command => "rm ${$download_path}",
+    path    => ['/usr/bin'],
+    onlyif  => "/usr/bin/test -f ${download_path}",
+    require => Exec['install_oneagent'],
   }
 
   if ($reboot_system) {
