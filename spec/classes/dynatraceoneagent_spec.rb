@@ -308,8 +308,8 @@ describe 'dynatraceoneagent' do
               ensure: 'file',
               owner: 'root',
               group: 'root',
-              mode: '0644',
-              content: %r{'--set-server' => 'https://example.com:9999', '--set-tenant' => 'abcdefg'},
+              mode: '0640',
+              content: sensitive(%r{'--set-server' => 'https://example.com:9999', '--set-tenant' => 'abcdefg'}),
             )
         }
         it {

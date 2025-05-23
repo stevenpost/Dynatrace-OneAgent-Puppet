@@ -59,9 +59,9 @@ class dynatraceoneagent::config {
       ensure  => file,
       owner   => $global_owner,
       group   => $global_group,
-      content => String($oneagent_communication_hash),
+      content => Sensitive(String($oneagent_communication_hash)),
       notify  => Exec['set_oneagent_communication'],
-      mode    => $global_mode,
+      mode    => '0640',
     }
   } else {
     file { $oneagent_comms_config_file:
