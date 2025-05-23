@@ -17,6 +17,20 @@ describe 'dynatraceoneagent' do
       it { is_expected.to compile.with_all_deps }
       it { is_expected.not_to contain_file('/tmp') }
       it {
+        is_expected.to contain_archive('Dynatrace-OneAgent-Linux-latest.sh')
+          .with(
+            ensure: 'present',
+            extract: false,
+            source: 'https://live.dynatrace.com/api/v1/deployment/installer/agent/unix/default/latest/?Api-Token=my_paas_token&arch=all',
+            path: '/tmp/Dynatrace-OneAgent-Linux-latest.sh',
+            allow_insecure: false,
+            creates: '/var/lib/dynatrace/oneagent/agent/config/agent.state',
+            proxy_server: nil,
+            cleanup: false,
+            download_options: nil,
+          )
+      }
+      it {
         is_expected.to contain_exec('install_oneagent')
           .with(
             command: [
