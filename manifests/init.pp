@@ -147,13 +147,11 @@ class dynatraceoneagent (
   $oneagent_tools_dir       = "${$install_dir}/agent/tools"
 
   if $package_state != 'absent' {
-    contain dynatraceoneagent::download
     contain dynatraceoneagent::install
     contain dynatraceoneagent::config
     contain dynatraceoneagent::service
 
-    Class['dynatraceoneagent::download']
-    -> Class['dynatraceoneagent::install']
+    Class['dynatraceoneagent::install']
     -> Class['dynatraceoneagent::config']
     -> Class['dynatraceoneagent::service']
   } else {
