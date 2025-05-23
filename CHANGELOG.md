@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 2.0.0
+
+**Warning:** breaking API changes
+
+### Features
+
+- Overhaul of the module
+- Support for `discovery` mode
+- Signature verification by default
+
+### Bugfixes
+
+- Fix signature verification
+
 ## Release 1.9.2
 
 ### Bugfixes

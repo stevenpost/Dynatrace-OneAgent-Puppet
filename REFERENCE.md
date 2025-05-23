@@ -100,7 +100,7 @@ Default value: `'latest'`
 
 Data type: `String`
 
-The architecture of your OS - default is all
+The architecture of your OS
 
 Default value: `'all'`
 
@@ -108,7 +108,7 @@ Default value: `'all'`
 
 Data type: `String`
 
-The type of the installer - default is default
+The type of the installer
 
 Default value: `'default'`
 
@@ -160,16 +160,13 @@ Data type: `Hash`
 Hash map of additional parameters to pass to the installer
 Refer to the Customize OneAgent installation documentation on [Technology Support](https://www.dynatrace.com/support/help/technology-support/operating-systems/)
 
-Default value: `{
-    '--set-monitoring-mode'        => $monitoring_mode,
-    '--set-app-log-content-access' => $log_monitoring,
-  }`
+Default value: `{}`
 
 ##### <a name="reboot_system"></a>`reboot_system`
 
 Data type: `Boolean`
 
-If set to true, puppet will reboot the server after installing the OneAgent - default is false
+If set to true, puppet will reboot the server after installing the OneAgent
 
 Default value: ``false``
 
@@ -185,7 +182,7 @@ Default value: `'running'`
 
 Data type: `Boolean`
 
-Whether puppet should manage the state of the OneAgent service - default is true
+Whether puppet should manage the state of the OneAgent service
 
 Default value: ``true``
 
