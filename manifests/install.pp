@@ -53,13 +53,16 @@ class dynatraceoneagent::install {
       source => "puppet:///modules/${module_name}/${cert_file_name}",
     }
 
-    $verify_signature_command = "( echo 'Content-Type: multipart/signed; protocol=\"application/x-pkcs7-signature\"; micalg=\"sha-256\";\
-     boundary=\"--SIGNED-INSTALLER\"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; \
-     cat ${download_path} ) | openssl cms -verify -CAfile ${dt_root_cert} > /dev/null"
+    $verify_signature_command = @("HERE"/L)
+    ( echo 'Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256";\
+    boundary="--SIGNED-INSTALLER"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; \
+    cat ${download_path} ) | openssl cms -verify -CAfile ${dt_root_cert} > /dev/null\
+    |HERE
 
     exec { 'verify_oneagent_installer':
-      command => $verify_signature_command,
+      command => ['bash', '-c', $verify_signature_command],
       path    => ['/usr/bin'],
+      unless  => "/usr/bin/test -f ${state_file}",
       require => [
         File[$dt_root_cert],
         Archive['oneagent_installer'],
