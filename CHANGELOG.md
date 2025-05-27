@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 2.0.1
+
+### Bugfixes
+
+- Signature verification was attempted on installed agents
+- Command for signature verification should be started from bash
+
 ## Release 2.0.0
 
 **Warning:** breaking API changes
