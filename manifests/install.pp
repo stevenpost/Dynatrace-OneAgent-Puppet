@@ -60,6 +60,7 @@ class dynatraceoneagent::install {
     exec { 'verify_oneagent_installer':
       command => $verify_signature_command,
       path    => ['/usr/bin'],
+      unless  => "/usr/bin/test -f ${state_file}",
       require => [
         File[$dt_root_cert],
         Archive['oneagent_installer'],

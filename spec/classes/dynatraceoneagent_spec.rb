@@ -43,6 +43,7 @@ describe 'dynatraceoneagent' do
           .with(
             command: %r{cat /tmp/Dynatrace-OneAgent-Linux-latest.sh},
             path: ['/usr/bin'],
+            unless: '/usr/bin/test -f /var/lib/dynatrace/oneagent/agent/config/agent.state',
           )
       }
       it { is_expected.to contain_exec('verify_oneagent_installer').with(command: %r{-CAfile /tmp/dt-root.cert.pem}) }
