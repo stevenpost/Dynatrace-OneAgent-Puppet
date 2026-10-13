@@ -40,47 +40,47 @@ class { 'dynatraceoneagent':
 
 The following parameters are available in the `dynatraceoneagent` class:
 
-* [`tenant_url`](#tenant_url)
-* [`paas_token`](#paas_token)
-* [`api_path`](#api_path)
-* [`version`](#version)
-* [`arch`](#arch)
-* [`installer_type`](#installer_type)
-* [`verify_signature`](#verify_signature)
-* [`proxy_server`](#proxy_server)
-* [`allow_insecure`](#allow_insecure)
-* [`download_options`](#download_options)
-* [`download_dir`](#download_dir)
-* [`oneagent_params_hash`](#oneagent_params_hash)
-* [`reboot_system`](#reboot_system)
-* [`service_state`](#service_state)
-* [`manage_service`](#manage_service)
-* [`package_state`](#package_state)
-* [`host_tags`](#host_tags)
-* [`host_metadata`](#host_metadata)
-* [`hostname`](#hostname)
-* [`oneagent_communication_hash`](#oneagent_communication_hash)
-* [`log_monitoring`](#log_monitoring)
-* [`log_access`](#log_access)
-* [`host_group`](#host_group)
-* [`monitoring_mode`](#monitoring_mode)
-* [`network_zone`](#network_zone)
-* [`oneagent_puppet_conf_dir`](#oneagent_puppet_conf_dir)
+* [`tenant_url`](#-dynatraceoneagent--tenant_url)
+* [`paas_token`](#-dynatraceoneagent--paas_token)
+* [`api_path`](#-dynatraceoneagent--api_path)
+* [`version`](#-dynatraceoneagent--version)
+* [`arch`](#-dynatraceoneagent--arch)
+* [`installer_type`](#-dynatraceoneagent--installer_type)
+* [`verify_signature`](#-dynatraceoneagent--verify_signature)
+* [`proxy_server`](#-dynatraceoneagent--proxy_server)
+* [`allow_insecure`](#-dynatraceoneagent--allow_insecure)
+* [`download_options`](#-dynatraceoneagent--download_options)
+* [`download_dir`](#-dynatraceoneagent--download_dir)
+* [`oneagent_params_hash`](#-dynatraceoneagent--oneagent_params_hash)
+* [`reboot_system`](#-dynatraceoneagent--reboot_system)
+* [`service_state`](#-dynatraceoneagent--service_state)
+* [`manage_service`](#-dynatraceoneagent--manage_service)
+* [`package_state`](#-dynatraceoneagent--package_state)
+* [`host_tags`](#-dynatraceoneagent--host_tags)
+* [`host_metadata`](#-dynatraceoneagent--host_metadata)
+* [`hostname`](#-dynatraceoneagent--hostname)
+* [`oneagent_communication_hash`](#-dynatraceoneagent--oneagent_communication_hash)
+* [`log_monitoring`](#-dynatraceoneagent--log_monitoring)
+* [`log_access`](#-dynatraceoneagent--log_access)
+* [`host_group`](#-dynatraceoneagent--host_group)
+* [`monitoring_mode`](#-dynatraceoneagent--monitoring_mode)
+* [`network_zone`](#-dynatraceoneagent--network_zone)
+* [`oneagent_puppet_conf_dir`](#-dynatraceoneagent--oneagent_puppet_conf_dir)
 
-##### <a name="tenant_url"></a>`tenant_url`
+##### <a name="-dynatraceoneagent--tenant_url"></a>`tenant_url`
 
 Data type: `String`
 
 URL of your dynatrace Tenant
 Managed `https://{your-domain}/e/{your-environment-id}` - SaaS `https://{your-environment-id}.live.dynatrace.com`
 
-##### <a name="paas_token"></a>`paas_token`
+##### <a name="-dynatraceoneagent--paas_token"></a>`paas_token`
 
 Data type: `String`
 
 Paas token for downloading the OneAgent installer
 
-##### <a name="api_path"></a>`api_path`
+##### <a name="-dynatraceoneagent--api_path"></a>`api_path`
 
 Data type: `String`
 
@@ -88,7 +88,7 @@ Path of the Dynatrace OneAgent deployment API
 
 Default value: `'/api/v1/deployment/installer/agent/'`
 
-##### <a name="version"></a>`version`
+##### <a name="-dynatraceoneagent--version"></a>`version`
 
 Data type: `String`
 
@@ -96,7 +96,7 @@ The required version of the OneAgent in 1.155.275.20181112-084458 format
 
 Default value: `'latest'`
 
-##### <a name="arch"></a>`arch`
+##### <a name="-dynatraceoneagent--arch"></a>`arch`
 
 Data type: `String`
 
@@ -104,7 +104,7 @@ The architecture of your OS
 
 Default value: `'all'`
 
-##### <a name="installer_type"></a>`installer_type`
+##### <a name="-dynatraceoneagent--installer_type"></a>`installer_type`
 
 Data type: `String`
 
@@ -112,40 +112,40 @@ The type of the installer
 
 Default value: `'default'`
 
-##### <a name="verify_signature"></a>`verify_signature`
+##### <a name="-dynatraceoneagent--verify_signature"></a>`verify_signature`
 
 Data type: `Boolean`
 
 Verify OneAgent installer signature (Linux only).
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="proxy_server"></a>`proxy_server`
+##### <a name="-dynatraceoneagent--proxy_server"></a>`proxy_server`
 
 Data type: `Optional[String]`
 
 Proxy server to be used by the archive module for downloading the OneAgent installer if needed
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="allow_insecure"></a>`allow_insecure`
+##### <a name="-dynatraceoneagent--allow_insecure"></a>`allow_insecure`
 
 Data type: `Boolean`
 
 Ignore HTTPS certificate errors when using the archive module.
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="download_options"></a>`download_options`
+##### <a name="-dynatraceoneagent--download_options"></a>`download_options`
 
 Data type: `Optional`
 
 In some cases you may need custom flags for curl/wget/s3 which can be supplied via download_options.
 Refer to [Download Customizations](https://github.com/voxpupuli/puppet-archive#download-customizations)
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="download_dir"></a>`download_dir`
+##### <a name="-dynatraceoneagent--download_dir"></a>`download_dir`
 
 Data type: `String`
 
@@ -153,7 +153,7 @@ OneAgent installer file download directory.
 
 Default value: `'/tmp'`
 
-##### <a name="oneagent_params_hash"></a>`oneagent_params_hash`
+##### <a name="-dynatraceoneagent--oneagent_params_hash"></a>`oneagent_params_hash`
 
 Data type: `Hash`
 
@@ -162,15 +162,15 @@ Refer to the Customize OneAgent installation documentation on [Technology Suppor
 
 Default value: `{}`
 
-##### <a name="reboot_system"></a>`reboot_system`
+##### <a name="-dynatraceoneagent--reboot_system"></a>`reboot_system`
 
 Data type: `Boolean`
 
 If set to true, puppet will reboot the server after installing the OneAgent
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="service_state"></a>`service_state`
+##### <a name="-dynatraceoneagent--service_state"></a>`service_state`
 
 Data type: `Enum['running','stopped']`
 
@@ -178,15 +178,15 @@ What state the dynatrace oneagent service should be in
 
 Default value: `'running'`
 
-##### <a name="manage_service"></a>`manage_service`
+##### <a name="-dynatraceoneagent--manage_service"></a>`manage_service`
 
 Data type: `Boolean`
 
 Whether puppet should manage the state of the OneAgent service
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="package_state"></a>`package_state`
+##### <a name="-dynatraceoneagent--package_state"></a>`package_state`
 
 Data type: `Enum['present','absent']`
 
@@ -194,7 +194,7 @@ What state the dynatrace oneagent package should be in
 
 Default value: `'present'`
 
-##### <a name="host_tags"></a>`host_tags`
+##### <a name="-dynatraceoneagent--host_tags"></a>`host_tags`
 
 Data type: `Array`
 
@@ -204,7 +204,7 @@ For example: ['Environment=Prod', 'Organization=D1P', 'Owner=john.doe@dynatrace.
 
 Default value: `[]`
 
-##### <a name="host_metadata"></a>`host_metadata`
+##### <a name="-dynatraceoneagent--host_metadata"></a>`host_metadata`
 
 Data type: `Array`
 
@@ -214,15 +214,15 @@ For example: ['LinuxHost', 'Gdansk', 'role=fallback', 'app=easyTravel']
 
 Default value: `[]`
 
-##### <a name="hostname"></a>`hostname`
+##### <a name="-dynatraceoneagent--hostname"></a>`hostname`
 
 Data type: `Optional[String[1]]`
 
 Overrides an automatically detected host name. Example: My App Server
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="oneagent_communication_hash"></a>`oneagent_communication_hash`
+##### <a name="-dynatraceoneagent--oneagent_communication_hash"></a>`oneagent_communication_hash`
 
 Data type: `Hash`
 
@@ -231,31 +231,31 @@ Refer to Change OneAgent communication settings on [Communication Settings](http
 
 Default value: `{}`
 
-##### <a name="log_monitoring"></a>`log_monitoring`
+##### <a name="-dynatraceoneagent--log_monitoring"></a>`log_monitoring`
 
 Data type: `Boolean`
 
 Enable or disable Log Monitoring
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="log_access"></a>`log_access`
+##### <a name="-dynatraceoneagent--log_access"></a>`log_access`
 
 Data type: `Boolean`
 
 Enable or disable access to system logs
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="host_group"></a>`host_group`
+##### <a name="-dynatraceoneagent--host_group"></a>`host_group`
 
 Data type: `Optional[String[1]]`
 
 Change host group assignment
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="monitoring_mode"></a>`monitoring_mode`
+##### <a name="-dynatraceoneagent--monitoring_mode"></a>`monitoring_mode`
 
 Data type: `Enum['fullstack','infra-only','discovery']`
 
@@ -263,15 +263,15 @@ Set the monitoring mode
 
 Default value: `'fullstack'`
 
-##### <a name="network_zone"></a>`network_zone`
+##### <a name="-dynatraceoneagent--network_zone"></a>`network_zone`
 
 Data type: `Optional[String[1]]`
 
 Set the network zone for the host
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="oneagent_puppet_conf_dir"></a>`oneagent_puppet_conf_dir`
+##### <a name="-dynatraceoneagent--oneagent_puppet_conf_dir"></a>`oneagent_puppet_conf_dir`
 
 Data type: `String`
 
