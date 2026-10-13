@@ -54,10 +54,10 @@ class dynatraceoneagent::install {
     }
 
     $verify_signature_command = @("HERE"/L)
-    ( echo 'Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256";\
-    boundary="--SIGNED-INSTALLER"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; \
-    cat ${download_path} ) | openssl cms -verify -CAfile ${dt_root_cert} > /dev/null\
-    |HERE
+      ( echo 'Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256";\
+      boundary="--SIGNED-INSTALLER"'; echo ; echo ; echo '----SIGNED-INSTALLER' ; \
+      cat ${download_path} ) | openssl cms -verify -CAfile ${dt_root_cert} > /dev/null\
+      |HERE
 
     exec { 'verify_oneagent_installer':
       command => ['bash', '-c', $verify_signature_command],
