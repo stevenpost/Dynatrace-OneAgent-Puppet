@@ -1,5 +1,8 @@
+# Managed by modulesync - DO NOT EDIT
+# https://gitlab.sfpd.fgov.be/cbi/modulesync-config
+
 *.rb eol=lf
 *.erb eol=lf
-*.pp eol=lf
+*.pp eol=lf gitlab-language=puppet
 *.sh eol=lf
 *.epp eol=lf

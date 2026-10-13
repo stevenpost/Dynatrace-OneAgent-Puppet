@@ -17,5 +17,3 @@ fixtures:
     powershell:
       repo: "puppetlabs/powershell"
       ref: "5.0.0"
-  symlinks:
-    dynatraceoneagent: "#{source_dir}"

@@ -1,44 +1,25 @@
+spec:
+  inputs:
+    custom-control-branch:
+      description: "Name of the unprotected branch to trigger in the control repo in order to deploy this module into a custom Puppet environment. Only applicable for non-default branches."
+      default: ""
+    skip-validate-and-test:
+      description: "Skip the validate and test stages. Only applicable for non-default branches and when a value for `custom-control-branch` is set."
+      default: false
+      type: boolean
 ---
-stages:
-  - syntax
-  - unit
+.validate-rules: &validate-rules
+  - if: $CI_COMMIT_TAG
+    when: never
+  - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-cache:
-  paths:
-    - vendor/bundle
-
-before_script:
-  - bundle -v
-  - rm Gemfile.lock || true
-  - "# Update system gems if requested. This is useful to temporarily workaround troubles in the test runner"
-  - "# Set `rubygems_version` in the .sync.yml to set a value"
-  - "# Ignore exit code of SIGPIPE'd yes to not fail with shell's pipefail set"
-  - '[ -z "$RUBYGEMS_VERSION" ] || (yes || true) | gem update --system $RUBYGEMS_VERSION'
-  - gem --version
-  - bundle -v
-  - bundle install --without system_tests --path vendor/bundle --jobs $(nproc)
-
-syntax lint metadata_lint check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop-Ruby 2.5.7-Puppet ~> 6:
-  stage: syntax
-  image: ruby:2.5.7
-  script:
-    - bundle exec rake syntax lint metadata_lint check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop
-  variables:
-    PUPPET_GEM_VERSION: '~> 6'
-
-parallel_spec-Ruby 2.5.7-Puppet ~> 6:
-  stage: unit
-  image: ruby:2.5.7
-  script:
-    - bundle exec rake parallel_spec
-  variables:
-    PUPPET_GEM_VERSION: '~> 6'
-
-parallel_spec-Ruby 2.4.5-Puppet ~> 5:
-  stage: unit
-  image: ruby:2.4.5
-  script:
-    - bundle exec rake parallel_spec
-  variables:
-    PUPPET_GEM_VERSION: '~> 5'
-
+include:
+  - component: $CI_SERVER_FQDN/cbi/pipeline-components/puppet/module-repo@~latest
+    inputs:
+      custom-control-branch: "$[[ inputs.custom-control-branch ]]"
+      skip-validate-and-test: "$[[ inputs.skip-validate-and-test ]]"
+  - component: $CI_SERVER_FQDN/cbi/pipeline-components/shellcheck/shellcheck@~latest
+    inputs:
+      directory: files/
+    rules: *validate-rules

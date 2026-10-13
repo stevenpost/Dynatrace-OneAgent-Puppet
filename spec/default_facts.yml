@@ -1,9 +1,18 @@
-# Use default_module_facts.yml for module specific facts.
-#
-# Facts specified here will override the values provided by rspec-puppet-facts.
 ---
+# Managed by modulesync - DO NOT EDIT
+# https://gitlab.sfpd.fgov.be/cbi/modulesync-config
+
+memory:
+  system:
+    total_bytes: 4194304000
 networking:
-  ip: "172.16.254.254"
-  ip6: "FE80:0000:0000:0000:AAAA:AAAA:AAAA"
-  mac: "AA:AA:AA:AA:AA:AA"
-is_pe: false
+  domain: sfpd.fgov.be
+  fqdn: lpr-app101.sfpd.fgov.be
+  hostname: lpr-app101
+  ip: 172.16.254.254
+  ip6: FE80:0000:0000:0000:AAAA:AAAA:AAAA
+  mac: AA:AA:AA:AA:AA:AA
+service_provider: systemd
+sfpd_cluster: app1
+sfpd_environment: production
+sfpd_short_environment: prd

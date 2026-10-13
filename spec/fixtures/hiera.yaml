@@ -1,0 +1,14 @@
+---
+# Managed by modulesync - DO NOT EDIT
+# https://gitlab.sfpd.fgov.be/cbi/modulesync-config
+
+version: 5
+
+defaults:
+  datadir: data
+  data_hash: yaml_data
+
+hierarchy:
+  - name: Common
+    paths:
+      - common.yaml

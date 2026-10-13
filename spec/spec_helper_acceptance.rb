@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require 'puppet_litmus'
-require 'spec_helper_acceptance_local' if File.file?(File.join(File.dirname(__FILE__), 'spec_helper_acceptance_local.rb'))
-include PuppetLitmus
+# Managed by modulesync - DO NOT EDIT
+# https://gitlab.sfpd.fgov.be/cbi/modulesync-config
 
-PuppetLitmus.configure!
+require 'voxpupuli/acceptance/spec_helper_acceptance'
+
+Dir['./spec/support/acceptance/**/*.rb'].sort.each { |f| require f }
