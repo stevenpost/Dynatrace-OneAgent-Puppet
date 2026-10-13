@@ -185,6 +185,12 @@ describe 'dynatraceoneagent' do
       }
       it { is_expected.to contain_service('oneagent').that_requires('Exec[install_oneagent]') }
 
+      # For 100% coverage
+      # These are actually implementation details
+      it { is_expected.to contain_class('dynatraceoneagent::install') }
+      it { is_expected.to contain_class('dynatraceoneagent::config') }
+      it { is_expected.to contain_class('dynatraceoneagent::service') }
+
       context 'with "download_dir => /root/tmp"' do
         let(:params) do
           super().merge('download_dir' => '/root/tmp')
@@ -465,6 +471,10 @@ describe 'dynatraceoneagent' do
             )
         }
         it { is_expected.not_to contain_exec('install_oneagent') }
+
+        # For 100% coverage
+        # This is an implementation detail
+        it { is_expected.to contain_class('dynatraceoneagent::uninstall') }
       end
     end
   end
