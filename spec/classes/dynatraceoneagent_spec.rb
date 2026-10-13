@@ -199,6 +199,7 @@ describe 'dynatraceoneagent' do
           .that_notifies('Exec[set_oneagent_communication]')
       }
       it { is_expected.to contain_exec('set_oneagent_communication').with(refreshonly: true) }
+      it { is_expected.not_to contain_exec('set_host_id') }
 
       it {
         is_expected.to contain_service('oneagent')
@@ -458,6 +459,25 @@ describe 'dynatraceoneagent' do
         it do
           install_command = catalogue.resource('Exec[install_oneagent]')[:command]
           expect(install_command).to include('--set-network-zone=testzone')
+        end
+      end
+
+      context 'with "host_id => testid"' do
+        let(:params) do
+          super().merge('host_id' => 'testid')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_exec('set_host_id')
+            .with(
+              command: 'oneagentctl --set-host-id=testid --restart-service',
+              unless: 'oneagentctl --get-host-id | grep -q \'^testid$\'',
+            )
+        }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('--set-host-id=testid')
         end
       end
 

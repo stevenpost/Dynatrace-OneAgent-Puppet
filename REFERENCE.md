@@ -66,6 +66,7 @@ The following parameters are available in the `dynatraceoneagent` class:
 * [`monitoring_mode`](#-dynatraceoneagent--monitoring_mode)
 * [`network_zone`](#-dynatraceoneagent--network_zone)
 * [`oneagent_puppet_conf_dir`](#-dynatraceoneagent--oneagent_puppet_conf_dir)
+* [`host_id`](#-dynatraceoneagent--host_id)
 
 ##### <a name="-dynatraceoneagent--tenant_url"></a>`tenant_url`
 
@@ -278,4 +279,12 @@ Data type: `String`
 Directory puppet will use to store oneagent configurations
 
 Default value: `'/var/lib/dynatrace/oneagent/agent/config/puppet'`
+
+##### <a name="-dynatraceoneagent--host_id"></a>`host_id`
+
+Data type: `Optional[String[1]]`
+
+Set the host-id
+
+Default value: `undef`
 

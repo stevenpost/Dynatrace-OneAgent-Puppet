@@ -68,6 +68,8 @@
 #   Set the network zone for the host
 # @param oneagent_puppet_conf_dir
 #   Directory puppet will use to store oneagent configurations
+# @param host_id
+#   Set the host-id
 #
 class dynatraceoneagent (
   String $tenant_url,
@@ -102,6 +104,7 @@ class dynatraceoneagent (
   Hash $oneagent_params_hash                                  = {},
   Optional[String[1]] $network_zone                           = undef,
   String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
+  Optional[String[1]] $host_id                                = undef,
 
 ) {
   $global_mode = '0644'
@@ -137,6 +140,10 @@ class dynatraceoneagent (
     false   => { '--set-system-logs-access-enabled' => 'false' },
     default => {},
   }
+  $host_id_param = $host_id ? {
+    undef   => {},
+    default => { '--set-host-id' => $host_id }
+  }
   $monitoring_mode_param = { '--set-monitoring-mode'       => $monitoring_mode }
   $log_monitoring_param = { '--set-app-log-content-access' => $log_monitoring }
 
@@ -147,6 +154,7 @@ class dynatraceoneagent (
   + $hostname_param
   + $network_zone_param
   + $log_access_param
+  + $host_id_param
 
   if $version == 'latest' {
     $download_link  = "${tenant_url}${api_path}${os_type}/${installer_type}/latest/?Api-Token=${paas_token}&arch=${arch}"
