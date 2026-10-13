@@ -67,6 +67,7 @@ The following parameters are available in the `dynatraceoneagent` class:
 * [`network_zone`](#-dynatraceoneagent--network_zone)
 * [`oneagent_puppet_conf_dir`](#-dynatraceoneagent--oneagent_puppet_conf_dir)
 * [`host_id`](#-dynatraceoneagent--host_id)
+* [`host_id_source`](#-dynatraceoneagent--host_id_source)
 
 ##### <a name="-dynatraceoneagent--tenant_url"></a>`tenant_url`
 
@@ -285,6 +286,14 @@ Default value: `'/var/lib/dynatrace/oneagent/agent/config/puppet'`
 Data type: `Optional[String[1]]`
 
 Set the host-id
+
+Default value: `undef`
+
+##### <a name="-dynatraceoneagent--host_id_source"></a>`host_id_source`
+
+Data type: `Optional[String[1]]`
+
+Set the source of the generate host-id
 
 Default value: `undef`
 

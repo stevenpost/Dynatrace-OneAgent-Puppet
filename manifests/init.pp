@@ -70,6 +70,8 @@
 #   Directory puppet will use to store oneagent configurations
 # @param host_id
 #   Set the host-id
+# @param host_id_source
+#  Set the source of the generate host-id
 #
 class dynatraceoneagent (
   String $tenant_url,
@@ -105,6 +107,7 @@ class dynatraceoneagent (
   Optional[String[1]] $network_zone                           = undef,
   String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
   Optional[String[1]] $host_id                                = undef,
+  Optional[String[1]] $host_id_source                         = undef,
 
 ) {
   $global_mode = '0644'
@@ -144,6 +147,10 @@ class dynatraceoneagent (
     undef   => {},
     default => { '--set-host-id' => $host_id }
   }
+  $host_id_source_param = $host_id_source ? {
+    undef   => {},
+    default => { '--set-host-id-source' => $host_id_source },
+  }
   $monitoring_mode_param = { '--set-monitoring-mode'       => $monitoring_mode }
   $log_monitoring_param = { '--set-app-log-content-access' => $log_monitoring }
 
@@ -155,6 +162,7 @@ class dynatraceoneagent (
   + $network_zone_param
   + $log_access_param
   + $host_id_param
+  + $host_id_source_param
 
   if $version == 'latest' {
     $download_link  = "${tenant_url}${api_path}${os_type}/${installer_type}/latest/?Api-Token=${paas_token}&arch=${arch}"
