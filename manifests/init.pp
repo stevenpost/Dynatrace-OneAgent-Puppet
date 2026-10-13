@@ -72,6 +72,8 @@
 #   Set the host-id
 # @param host_id_source
 #  Set the source of the generate host-id
+# @param change_existing_host_id
+#   Wether to apply a host-id to an existing installation. If false, only new installations get the ID assigned or generated.
 #
 class dynatraceoneagent (
   String $tenant_url,
@@ -108,6 +110,7 @@ class dynatraceoneagent (
   String $oneagent_puppet_conf_dir                            = '/var/lib/dynatrace/oneagent/agent/config/puppet',
   Optional[String[1]] $host_id                                = undef,
   Optional[String[1]] $host_id_source                         = undef,
+  Boolean $change_existing_host_id                            = true,
 
 ) {
   $global_mode = '0644'

@@ -27,6 +27,7 @@ class dynatraceoneagent::config {
   $oneagent_puppet_conf_dir            = $dynatraceoneagent::oneagent_puppet_conf_dir
   $host_id                             = $dynatraceoneagent::host_id
   $host_id_source                      = $dynatraceoneagent::host_id_source
+  $change_existing_host_id             = $dynatraceoneagent::change_existing_host_id
 
   $oneagent_comms_config_file          = "${oneagent_puppet_conf_dir}/deployment.conf"
   $oneagent_logmonitoring_config_file  = "${oneagent_puppet_conf_dir}/logmonitoring.conf"
@@ -243,7 +244,7 @@ class dynatraceoneagent::config {
     unless    => $_network_zone_unless,
   }
 
-  unless $host_id == undef {
+  unless $host_id == undef or ! $change_existing_host_id {
     exec { 'set_host_id':
       command   => "${oactl} --set-host-id=${host_id} --restart-service",
       path      => $oneagentctl_exec_path,
@@ -254,7 +255,7 @@ class dynatraceoneagent::config {
     }
   }
 
-  unless $host_id_source == undef {
+  unless $host_id_source == undef or ! $change_existing_host_id {
     exec { 'set_host_id_source':
       command   => "${oactl} --set-host-id-source=${host_id_source} --restart-service",
       path      => $oneagentctl_exec_path,

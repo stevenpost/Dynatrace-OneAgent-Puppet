@@ -68,6 +68,7 @@ The following parameters are available in the `dynatraceoneagent` class:
 * [`oneagent_puppet_conf_dir`](#-dynatraceoneagent--oneagent_puppet_conf_dir)
 * [`host_id`](#-dynatraceoneagent--host_id)
 * [`host_id_source`](#-dynatraceoneagent--host_id_source)
+* [`change_existing_host_id`](#-dynatraceoneagent--change_existing_host_id)
 
 ##### <a name="-dynatraceoneagent--tenant_url"></a>`tenant_url`
 
@@ -296,4 +297,12 @@ Data type: `Optional[String[1]]`
 Set the source of the generate host-id
 
 Default value: `undef`
+
+##### <a name="-dynatraceoneagent--change_existing_host_id"></a>`change_existing_host_id`
+
+Data type: `Boolean`
+
+Wether to apply a host-id to an existing installation. If false, only new installations get the ID assigned or generated.
+
+Default value: `true`
 
