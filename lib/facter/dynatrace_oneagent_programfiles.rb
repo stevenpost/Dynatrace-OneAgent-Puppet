@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Facter.add(:dynatrace_oneagent_programfiles) do
   setcode do
     if Dir.const_defined? 'PROGRAM_FILES'

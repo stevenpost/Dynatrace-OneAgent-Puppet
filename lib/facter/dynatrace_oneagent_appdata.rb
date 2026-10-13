@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Facter.add(:dynatrace_oneagent_appdata) do
   setcode do
     if Dir.const_defined? 'COMMON_APPDATA'

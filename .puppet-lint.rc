@@ -1,1 +1,7 @@
+# Managed by modulesync - DO NOT EDIT
+# https://gitlab.sfpd.fgov.be/cbi/modulesync-config
+
+--fail-on-warnings
 --relative
+--no-package_ensure-check
+--no-exec_idempotency-check
