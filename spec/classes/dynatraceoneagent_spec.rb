@@ -199,6 +199,8 @@ describe 'dynatraceoneagent' do
           .that_notifies('Exec[set_oneagent_communication]')
       }
       it { is_expected.to contain_exec('set_oneagent_communication').with(refreshonly: true) }
+      it { is_expected.not_to contain_exec('set_host_id') }
+      it { is_expected.not_to contain_exec('set_host_id_source') }
 
       it {
         is_expected.to contain_service('oneagent')
@@ -458,6 +460,62 @@ describe 'dynatraceoneagent' do
         it do
           install_command = catalogue.resource('Exec[install_oneagent]')[:command]
           expect(install_command).to include('--set-network-zone=testzone')
+        end
+      end
+
+      context 'with "host_id => testid"' do
+        let(:params) do
+          super().merge('host_id' => 'testid')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_exec('set_host_id')
+            .with(
+              command: 'oneagentctl --set-host-id=testid --restart-service',
+              unless: 'oneagentctl --get-host-id | grep -q \'^testid$\'',
+            )
+        }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('--set-host-id=testid')
+        end
+
+        context 'with "change_existing_host_id => false"' do
+          let(:params) do
+            super().merge('change_existing_host_id' => false)
+          end
+
+          it { is_expected.to compile.with_all_deps }
+          it { is_expected.not_to contain_exec('set_host_id') }
+        end
+      end
+
+      context 'with "host_id_source => fqdn"' do
+        let(:params) do
+          super().merge('host_id_source' => 'fqdn')
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it {
+          is_expected.to contain_exec('set_host_id_source')
+            .with(
+              command: 'oneagentctl --set-host-id-source=fqdn --restart-service',
+              unless: 'oneagentctl --get-host-id-source | grep -q \'^fqdn$\'',
+            )
+        }
+        it do
+          install_command = catalogue.resource('Exec[install_oneagent]')[:command]
+          expect(install_command).to include('--set-host-id-source=fqdn')
+        end
+
+        context 'with "change_existing_host_id => false"' do
+          let(:params) do
+            super().merge('change_existing_host_id' => false)
+          end
+
+          it { is_expected.to compile.with_all_deps }
+          it { is_expected.not_to contain_exec('set_host_id_source') }
         end
       end
 

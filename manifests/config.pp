@@ -25,6 +25,9 @@ class dynatraceoneagent::config {
   $monitoring_mode                     = $dynatraceoneagent::monitoring_mode
   $network_zone                        = $dynatraceoneagent::network_zone
   $oneagent_puppet_conf_dir            = $dynatraceoneagent::oneagent_puppet_conf_dir
+  $host_id                             = $dynatraceoneagent::host_id
+  $host_id_source                      = $dynatraceoneagent::host_id_source
+  $change_existing_host_id             = $dynatraceoneagent::change_existing_host_id
 
   $oneagent_comms_config_file          = "${oneagent_puppet_conf_dir}/deployment.conf"
   $oneagent_logmonitoring_config_file  = "${oneagent_puppet_conf_dir}/logmonitoring.conf"
@@ -239,5 +242,27 @@ class dynatraceoneagent::config {
     logoutput => on_failure,
     onlyif    => $_network_zone_onlyif,
     unless    => $_network_zone_unless,
+  }
+
+  unless $host_id == undef or ! $change_existing_host_id {
+    exec { 'set_host_id':
+      command   => "${oactl} --set-host-id=${host_id} --restart-service",
+      path      => $oneagentctl_exec_path,
+      cwd       => $oneagent_tools_dir,
+      timeout   => 6000,
+      logoutput => on_failure,
+      unless    => "${oactl} --get-host-id | grep -q '^${host_id}$'",
+    }
+  }
+
+  unless $host_id_source == undef or ! $change_existing_host_id {
+    exec { 'set_host_id_source':
+      command   => "${oactl} --set-host-id-source=${host_id_source} --restart-service",
+      path      => $oneagentctl_exec_path,
+      cwd       => $oneagent_tools_dir,
+      timeout   => 6000,
+      logoutput => on_failure,
+      unless    => "${oactl} --get-host-id-source | grep -q '^${host_id_source}$'",
+    }
   }
 }
