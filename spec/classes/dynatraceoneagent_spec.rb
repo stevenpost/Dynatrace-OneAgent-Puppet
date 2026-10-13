@@ -92,6 +92,8 @@ describe 'dynatraceoneagent' do
       it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logaccess.conf').with(ensure: 'absent') }
       it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/logmonitoring.conf').with(ensure: 'absent') }
       it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/infraonly.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostautotag.conf').with(ensure: 'absent') }
+      it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostautotag.conf').that_notifies('Exec[unset_host_tags]') }
       it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostcustomproperties.conf').with(ensure: 'absent') }
       it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostcustomproperties.conf').that_notifies('Exec[unset_host_metadata]') }
       it {
@@ -110,6 +112,17 @@ describe 'dynatraceoneagent' do
         is_expected.to contain_exec('unset_host_metadata')
           .with(
             command: 'oneagentctl --get-host-properties | xargs -I{} oneagentctl --remove-host-property={}',
+            path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
+            cwd: '/opt/dynatrace/oneagent/agent/tools',
+            timeout: 6000,
+            logoutput: 'on_failure',
+            refreshonly: true,
+          )
+      }
+      it {
+        is_expected.to contain_exec('unset_host_tags')
+          .with(
+            command: 'oneagentctl --get-host-tags | xargs -I{} oneagentctl --remove-host-tag={}',
             path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
             cwd: '/opt/dynatrace/oneagent/agent/tools',
             timeout: 6000,
@@ -334,6 +347,33 @@ describe 'dynatraceoneagent' do
           install_command = catalogue.resource('Exec[install_oneagent]')[:command]
           expect(install_command).to include('--set-host-name=testhost')
         end
+      end
+
+      context 'with "host_tags => [foo, bar]"' do
+        let(:params) do
+          super().merge(
+            'host_tags' => [
+              'foo',
+              'bar',
+            ],
+          )
+        end
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostautotag.conf').with(ensure: 'file') }
+        it { is_expected.to contain_file('/var/lib/dynatrace/oneagent/agent/config/puppet/hostautotag.conf').that_notifies('Exec[set_host_tags]') }
+
+        it {
+          is_expected.to contain_exec('set_host_tags')
+            .with(
+              command: 'oneagentctl --get-host-tags | xargs -I{} oneagentctl --remove-host-tag={}; oneagentctl --set-host-tag=foo --set-host-tag=bar',
+              path: ['/usr/bin/', '/opt/dynatrace/oneagent/agent/tools'],
+              cwd: '/opt/dynatrace/oneagent/agent/tools',
+              timeout: 6000,
+              logoutput: 'on_failure',
+              refreshonly: true,
+            )
+        }
       end
 
       context 'with "host_metadata => [app=easyTravel, team=foo]"' do
